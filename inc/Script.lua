@@ -2,8 +2,8 @@
      _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]]
 local function iBoss(msg,MsgText)
@@ -21,7 +21,7 @@ end
  
 if MsgText[1] == "تعطيل" and not MsgText[2] then
 if not msg.SudoUser then return '🛠*¦* أنـت لـسـت الـمـطـور ⚙️'end
-if not redis:get(kenwa..'group:add'..msg.chat_id_) then return '🛠*¦* المجموعه بالتأكيد ✓️ تم تعطيلها' end  
+if not redis:get(A7KAN..'group:add'..msg.chat_id_) then return '🛠*¦* المجموعه بالتأكيد ✓️ تم تعطيلها' end  
 rem_data_group(msg.chat_id_)
 return '📛*¦* تـم تـعـطـيـل الـمـجـمـوعـه ⚠️'
 end
@@ -32,13 +32,13 @@ if msg.type ~= 'pv' and msg.GroupActive then
 
 if MsgText[1] == "ايدي" or MsgText[1]:lower() == "id" then
 if not MsgText[2] and not msg.reply_id then
-if redis:get(kenwa..'lock_id'..msg.chat_id_) then
+if redis:get(A7KAN..'lock_id'..msg.chat_id_) then
 GetUserID(msg.sender_user_id_,function(arg,data)
-local msgs = redis:get(kenwa..'msgs:'..data.id_..':'..arg.chat_id_) or 1
+local msgs = redis:get(A7KAN..'msgs:'..data.id_..':'..arg.chat_id_) or 1
 if data.username_ then UserNameID = "🎫¦ مـعرفك •⊱ @"..data.username_.." ⊰•\n" else UserNameID = "" end
 if data.last_name_ then Name = data.first_name_ .." "..data.last_name_ else Name = data.first_name_ end
 local Namei = FlterName(data,20)
-if redis:get(kenwa..':lock_id_photo:'..arg.chat_id_) then
+if redis:get(A7KAN..':lock_id_photo:'..arg.chat_id_) then
 sendMsg(arg.chat_id_,arg.id_,
 '👤¦ أســمـك •⊱ { '..Namei..' } ⊰•\n'
 ..'['..UserNameID..']'
@@ -110,8 +110,8 @@ end
 if MsgText[1] == "المجموعه" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
 GetFullChat(msg.chat_id_,function(arg,data)
-local GroupName = (redis:get(kenwa..'group:name'..arg.ChatID) or '')
-redis:set(kenwa..'linkGroup'..arg.ChatID,(data.invite_link_ or ""))
+local GroupName = (redis:get(A7KAN..'group:name'..arg.ChatID) or '')
+redis:set(A7KAN..'linkGroup'..arg.ChatID,(data.invite_link_ or ""))
 sendMsg(arg.ChatID,arg.MsgID,
 "ـ  •⊱ { مـعـلومـات الـمـجـموعـه } ⊰•\n\n"
 .."*👥¦* عدد الاعـضـاء •⊱ { *"..data.member_count_.."* } ⊰•"
@@ -128,7 +128,7 @@ end
 if MsgText[1] == "تثبيت" and msg.reply_id then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
 local GroupID = msg.chat_id_:gsub('-100','')
-if not msg.Director and redis:get(kenwa..'lock_pin'..msg.chat_id_) then
+if not msg.Director and redis:get(A7KAN..'lock_pin'..msg.chat_id_) then
 return "لا يمكنك التثبيت الامر مقفول من قبل الاداره"
 else
 tdcli_function({
@@ -138,7 +138,7 @@ message_id_ = msg.reply_id,
 disable_notification_ = 1},
 function(arg,data)
 if data.ID == "Ok" then
-redis:set(kenwa..":MsgIDPin:"..arg.ChatID,arg.reply_id)
+redis:set(A7KAN..":MsgIDPin:"..arg.ChatID,arg.reply_id)
 sendMsg(arg.ChatID,arg.MsgID,"🙋🏼‍♂️*¦* أهلا عزيزي "..arg.TheRankCmd.." \n📌*¦* تم تثبيت الرساله \n✓")
 elseif data.ID == "Error" and data.code_ == 6 then
 sendMsg(arg.ChatID,arg.MsgID,'📛*¦* عذرا لا يمكنني التثبيت .\n🎟*¦* لست مشرف او لا املك صلاحيه التثبيت \n ❕')    
@@ -150,7 +150,7 @@ end
 
 if MsgText[1] == "الغاء التثبيت" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-if not msg.Director and redis:get(kenwa..'lock_pin'..msg.chat_id_) then return "لا يمكنك الغاء التثبيت الامر مقفول من قبل الاداره" end
+if not msg.Director and redis:get(A7KAN..'lock_pin'..msg.chat_id_) then return "لا يمكنك الغاء التثبيت الامر مقفول من قبل الاداره" end
 tdcli_function({ID="UnpinChannelMessage",channel_id_ = msg.chat_id_:gsub('-100','')},function(arg,data) 
 if data.ID == "Ok" then
 sendMsg(arg.ChatID,arg.MsgID,"🙋🏼‍♂️*¦* أهلا عزيزي "..arg.TheRankCmd.."  \n💬*¦* تم الغاء تثبيت الرساله \n✓")    
@@ -174,13 +174,13 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد الادمن\n🛠") 
 end
 GetChatMember(arg.ChatID,UserID,function(arg,data)
@@ -208,13 +208,13 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك تقييد الادمن\n🛠") 
 end
 GetChatMember(arg.ChatID,our_id,function(arg,data)
@@ -314,13 +314,13 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if redis:sismember(kenwa..'whitelist:'..arg.ChatID,arg.UserID) then 
+if redis:sismember(A7KAN..'whitelist:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد عضو مميز \n✓️',12,utf8.len(USERNAME))
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تمت ترقيته ليصبح عضو مميز \n✓️',12,utf8.len(USERNAME))
 end
 
@@ -337,13 +337,13 @@ elseif data.type_.ID == "ChannelChatInfo" then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* عذرا هذا معرف قناة وليس حساب \n📛") 
 end
 UserName = Flter_Markdown(arg.UserName)
-if redis:sismember(kenwa..'whitelist:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..'whitelist:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..'\n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد من عضو مميز \n✓️') 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:sadd(kenwa..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:sadd(A7KAN..'whitelist:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت ترقيته ليصبح ضمن عضو مميز \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -364,10 +364,10 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if not redis:sismember(kenwa..'whitelist:'..arg.ChatID,arg.UserID) then 
+if not redis:sismember(A7KAN..'whitelist:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ليس عضو مميز \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تمت تنزيله من عضو مميز \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -377,10 +377,10 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'whitelist:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..'whitelist:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..'\n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ليس من عضو مميز \n✓️') 
 else
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
 return sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت تنزيله من عضو مميز \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -401,16 +401,16 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if redis:sismember(kenwa..'owners:'..arg.ChatID,arg.UserID) then 
+if redis:sismember(A7KAN..'owners:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد مدير \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..'owners:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..'owners:'..arg.ChatID,UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تمت ترقيته ليصبح مدير \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -426,18 +426,18 @@ elseif data.type_.ID == "ChannelChatInfo" then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* عذرا هذا معرف قناة وليس حساب \n📛") 
 end
 UserName = Flter_Markdown(arg.UserName)
-if redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..'\n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد مدير \n✓️') 
 else
-redis:hset(kenwa..'username:'..UserID, 'username',UserName)
-redis:sadd(kenwa..'owners:'..arg.ChatID,UserID)
+redis:hset(A7KAN..'username:'..UserID, 'username',UserName)
+redis:sadd(A7KAN..'owners:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت ترقيته ليصبح مدير \n✓️')
 end
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
 elseif MsgText[2] and MsgText[2]:match('^%d+$') then
 GetUserID(MsgText[2],action_by_id,{msg=msg,cmd="setowner"})
@@ -456,15 +456,15 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if not redis:sismember(kenwa..'owners:'..arg.ChatID,arg.UserID) then 
+if not redis:sismember(A7KAN..'owners:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ليس مدير \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'owners:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم تنزيله من المدير  \n✓️',12,utf8.len(USERNAME)) 
 end
 
@@ -475,17 +475,17 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ليس مدير \n✓️') 
 else
-redis:srem(kenwa..'owners:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم تنزيله من الاداره \n✓️')
 end
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
 elseif MsgText[2] and MsgText[2]:match('^%d+$') then
 GetUserID(MsgText[2],action_by_id,{msg=msg,cmd="remowner"}) 
@@ -504,17 +504,17 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then 
+if redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد منشىء  \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'owners:'..arg.ChatID,arg.UserID)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..':MONSHA_BOT:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..':MONSHA_BOT:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تمت ترقيته ليصبح منشىء في البوت \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -530,17 +530,17 @@ elseif data.type_.ID == "ChannelChatInfo" then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* عذرا هذا معرف قناة وليس حساب \n📛") 
 end
 UserName = Flter_Markdown(arg.UserName)
-if redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..'\n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد منشىء في البوت \n✓️') 
 else
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'owners:'..arg.ChatID,UserID)
-redis:sadd(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,UserID)
+redis:sadd(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت ترقيته ليصبح منشىء في البوت \n✓️')
 end
 
@@ -564,16 +564,16 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if not redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then
+if not redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ليس منشىء \n✓️',12,utf8.len(USERNAME))
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'owners:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..':MONSHA_BOT:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..':MONSHA_BOT:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم تنزيله من المنشىء \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=ChatID,UserID=UserID,MsgID=MsgID})
@@ -583,16 +583,16 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..'\n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ليس منشىء \n✓️') 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'owners:'..arg.ChatID,UserID)
-redis:srem(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'owners:'..arg.ChatID,UserID)
+redis:srem(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت تنزيله من المنشىء \n✓️') 
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -613,16 +613,16 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if redis:sismember(kenwa..'admins:'..arg.ChatID,arg.UserID) then 
+if redis:sismember(A7KAN..'admins:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ادمن \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..'admins:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تمت ترقيته ليصبح ادمن \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -638,16 +638,16 @@ elseif data.type_.ID == "ChannelChatInfo" then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* عذرا هذا معرف قناة وليس حساب \n📛") 
 end
 UserName = Flter_Markdown(arg.UserName)
-if redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ادمن \n✓️') 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:sadd(kenwa..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:sadd(A7KAN..'admins:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تمت ترقيته ليصبح ادمن \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -668,12 +668,12 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-if not redis:sismember(kenwa..'admins:'..arg.ChatID,arg.UserID) then 
+if not redis:sismember(A7KAN..'admins:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ليس ادمن \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,arg.UserID)
-redis:srem(kenwa..'admins:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم تنزيله من الادمنيه \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -683,10 +683,10 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ليس ادمن \n✓️') 
 else
-redis:srem(kenwa..'admins:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'admins:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم تنزيله من الادمنيه \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -703,7 +703,7 @@ if not data.sender_user_id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* �
 local UserID = data.sender_user_id_
 GetUserID(UserID,function(arg,data)
 local USERNAME = ResolveUserName(data)
-local maseegs = redis:get(kenwa..'msgs:'..arg.UserID..':'..arg.ChatID) or 1
+local maseegs = redis:get(A7KAN..'msgs:'..arg.UserID..':'..arg.ChatID) or 1
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n📮¦ رسائلك » {'..maseegs..'} رسالةة\n🔖¦ التفاعل »  '..Get_Ttl(maseegs)..' \n🙇🏽',12,utf8.len(USERNAME)) 
@@ -713,7 +713,7 @@ elseif MsgText[2] and MsgText[2]:match('@[%a%d_]+') then
 GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
-local maseegs = redis:get(kenwa..'msgs:'..UserID..':'..ChatID) or 1
+local maseegs = redis:get(A7KAN..'msgs:'..UserID..':'..ChatID) or 1
 local namei = FlterName(data.title_)
 USERCAR = utf8.len(namei)
 SendMention(arg.ChatID,UserID,arg.MsgID,'👤¦ العضو » '..namei..' \n📮¦ رسائلك » {'..maseegs..'} رسالةة\n🔖¦ التفاعل »  '..Get_Ttl(maseegs)..' \n🙇🏽',12,utf8.len(USERNAME))
@@ -763,13 +763,13 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد الادمن\n🛠") 
 end
 kick_user(UserID,arg.ChatID,function(arg,data)
@@ -780,11 +780,11 @@ return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني حظر العض�
 end
 GetUserID(arg.UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم طرد العضو \n✓️',12,utf8.len(USERNAME))
-redis:sadd(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:sadd(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 StatusLeft(arg.ChatID,arg.UserID)
 end,{ChatID=arg.ChatID,UserID=arg.UserID,MsgID=arg.MsgID})
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -799,13 +799,13 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك طرد الادمن\n🛠") 
 end
 kick_user(UserID,arg.ChatID,function(arg,data)
@@ -814,8 +814,8 @@ return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني طرد العض�
 elseif data.ID == "Error" and data.code_ == 3 then
 return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني طرد العضو .\n🎟*¦* ليس لدي صلاحيه الحظر او لست مشرف\n ❕')    
 end
-redis:hset(kenwa..'username:'..arg.UserID,'username',arg.UserName)
-redis:sadd(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',arg.UserName)
+redis:sadd(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 StatusLeft(arg.ChatID,arg.UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..arg.UserName..' \n🎫*¦* الايدي » (`'..arg.UserID..'`)\n🛠*¦* تم طرد العضو \n✓️')
 end,{ChatID=arg.ChatID,MsgID=arg.MsgID,UserName=UserName,UserID=UserID})
@@ -839,13 +839,13 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر الادمن\n🛠") 
 end
 
@@ -857,10 +857,10 @@ return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني حظر العض�
 else
 GetUserID(arg.UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME) 
-redis:sadd(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:sadd(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم حظره  \n✓️',12,utf8.len(USERNAME)) 
 end,{ChatID=arg.ChatID,UserID=arg.UserID,MsgID=arg.MsgID})
 end
@@ -876,19 +876,19 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر الادمن\n🛠") 
 end
 if data.type_.ID == "ChannelChatInfo" then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* عذرا هذا معرف قناة وليس حساب \n📛") 
 end
-if redis:sismember(kenwa..'banned:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..'banned:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد حظره \n✓️') 
 end
 kick_user(UserID,arg.ChatID,function(arg,data)
@@ -897,8 +897,8 @@ return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني حظر العض�
 elseif data.ID == "Error" and data.code_ == 3 then
 return sendMsg(arg.ChatID,arg.MsgID,'📛*¦* لا يمكنني حظر العضو .\n🎟*¦* ليس لدي صلاحيه الحظر او لست مشرف\n ❕')    
 end
-redis:hset(kenwa..'username:'..arg.UserID, 'username',arg.UserName)
-redis:sadd(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID, 'username',arg.UserName)
+redis:sadd(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 return sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..arg.UserName..' \n🎫*¦* الايدي » (`'..arg.UserID..'`)\n🛠*¦* تم حظره \n✓️')
 end,{ChatID=arg.ChatID,MsgID=arg.MsgID,UserName=UserName,UserID=UserID})
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -920,7 +920,7 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERCAR = utf8.len(USERNAME)
 GetChatMember(arg.ChatID,arg.UserID,function(arg,data)
-if (data.status_.ID == "ChatMemberStatusKicked" or redis:sismember(kenwa..'banned:'..arg.ChatID,arg.UserID)) then
+if (data.status_.ID == "ChatMemberStatusKicked" or redis:sismember(A7KAN..'banned:'..arg.ChatID,arg.UserID)) then
 StatusLeft(arg.ChatID,arg.UserID,function(arg,data) 
 if data.message_ and data.message_ == "CHAT_ADMIN_REQUIRED" then 
 sendMsg(arg.ChatID,arg.MsgID,"📛*¦* عذرا البوت ليس لديه صلاحيات الحظر \n❕")
@@ -928,7 +928,7 @@ else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..arg.USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم الغاء حظره \n✓️',12,arg.USERCAR) 
 end
 end,{ChatID=arg.ChatID,UserID=arg.UserID,MsgID=arg.MsgID,USERNAME=arg.USERNAME,USERCAR=arg.USERCAR})
-redis:srem(kenwa..'banned:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,arg.UserID)
 else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..arg.USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ العضو ليس محظور  \n✓️',12,arg.USERCAR) 
 end
@@ -941,12 +941,12 @@ if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد
 if data.id_ == our_id then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لا يمكنك تنفيذ الامر مع البوت \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'banned:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..'banned:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد الغاء حظره \n✓️') 
 else
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم الغاء حظره \n✓️')
 end
-redis:srem(kenwa..'banned:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'banned:'..arg.ChatID,UserID)
 StatusLeft(arg.ChatID,UserID)
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
 elseif MsgText[2] and MsgText[2]:match('^%d+$') then 
@@ -974,31 +974,31 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم الادمن\n🛠") 
 end
 --[[
     _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]]
 GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERCAR = utf8.len(USERNAME)
-if redis:sismember(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID) then 
+if redis:sismember(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم بالتأكيد كتمه  \n✓️',12,utf8.len(USERNAME)) 
 else
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم كتمه \n✓️',12,utf8.len(USERNAME)) 
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
@@ -1012,20 +1012,20 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المطور الاساسي\n🛠") 
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المطور\n🛠") 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المنشئ\n🛠") 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم المدير\n🛠") 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,UserID) then 
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك كتم الادمن\n🛠") 
 end
-if redis:sismember(kenwa..'is_silent_users:'..arg.ChatID,UserID) then 
+if redis:sismember(A7KAN..'is_silent_users:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد كتمه \n✓️') 
 else
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:sadd(kenwa..'is_silent_users:'..arg.ChatID,UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:sadd(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم كتمه \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -1045,11 +1045,11 @@ local UserID = data.sender_user_id_
 GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERCAR = utf8.len(USERNAME)
-if not redis:sismember(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID) then 
+if not redis:sismember(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم بالتاكيد الغاء كتمه  \n✓️',12,utf8.len(USERNAME)) 
 else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم الغاء كتمه  \n✓️',12,utf8.len(USERNAME)) 
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,arg.UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,arg.UserID)
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
 end,{ChatID=msg.chat_id_,MsgID=msg.id_})
@@ -1058,10 +1058,10 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'is_silent_users:'..arg.ChatID,UserID) then 
+if not redis:sismember(A7KAN..'is_silent_users:'..arg.ChatID,UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد الغاء كتمه \n✓️') 
 else
-redis:srem(kenwa..'is_silent_users:'..arg.ChatID,UserID)
+redis:srem(A7KAN..'is_silent_users:'..arg.ChatID,UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم الغاء كتمه \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -1152,12 +1152,12 @@ end
  
 if MsgText[1] == "انشاء رابط" then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-if not redis:get(kenwa..'ExCmdLink'..msg.chat_id_) then
+if not redis:get(A7KAN..'ExCmdLink'..msg.chat_id_) then
 local LinkGp = ExportLink(msg.chat_id_)
 if LinkGp then
 LinkGp = LinkGp.result
-redis:set(kenwa..'linkGroup'..msg.chat_id_,LinkGp)
-redis:setex(kenwa..'ExCmdLink'..msg.chat_id_,120,true)
+redis:set(A7KAN..'linkGroup'..msg.chat_id_,LinkGp)
+redis:setex(A7KAN..'ExCmdLink'..msg.chat_id_,120,true)
 return sendMsg(msg.chat_id_,msg.id_,"🙋🏼‍♂️*¦* تم انشاء رابط جديد \n🔖¦ ["..LinkGp.."]\n🔖¦ لعرض الرابط ارسل { الرابط } \n")
 else
 return sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنني انشاء رابط للمجموعه .\n🎟¦ لانني لست مشرف في المجموعه \n ❕")
@@ -1169,25 +1169,25 @@ return false
 end 
 
 if MsgText[1] == "الرابط" then
-if not redis:get(kenwa..'linkGroup'..msg.chat_id_) then 
+if not redis:get(A7KAN..'linkGroup'..msg.chat_id_) then 
 return "📡*¦* اوه 🙀 لا يوجد رابط ☹️\n🔖*¦*لانشاء رابط ارسل { انشاء رابط } \n📡" 
 end
-local GroupName = redis:get(kenwa..'group:name'..msg.chat_id_)
-local GroupLink = redis:get(kenwa..'linkGroup'..msg.chat_id_)
+local GroupName = redis:get(A7KAN..'group:name'..msg.chat_id_)
+local GroupLink = redis:get(A7KAN..'linkGroup'..msg.chat_id_)
 return "🔖¦رابـط الـمـجـمـوعه 💯\n🌿¦ "..Flter_Markdown(GroupName).." :\n\n["..GroupLink.."]\n"
 end
 
 if MsgText[1] == "ضع القوانين" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-redis:setex(kenwa..'rulse:witting'..msg.sender_user_id_,300,true)
+redis:setex(A7KAN..'rulse:witting'..msg.sender_user_id_,300,true)
 return '📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل القوانين  للمجموعه 🍃'
 end
 
 if MsgText[1] == "القوانين" then
-if not redis:get(kenwa..'rulse:msg'..msg.chat_id_) then 
+if not redis:get(A7KAN..'rulse:msg'..msg.chat_id_) then 
 return "📡*¦* مرحبأ عزيري 👋🏻 القوانين كلاتي 👇🏻\n🔖¦ ممنوع نشر الروابط \n🔖¦ ممنوع التكلم او نشر صور اباحيه \n🔖¦ ممنوع  اعاده توجيه\n🔖¦ ممنوع التكلم بلطائفه \n🔖¦ الرجاء احترام المدراء والادمنيه 😅\n"
 else 
-return "*🔖¦القوانين :*\n"..redis:get(kenwa..'rulse:msg'..msg.chat_id_) 
+return "*🔖¦القوانين :*\n"..redis:get(A7KAN..'rulse:msg'..msg.chat_id_) 
 end 
 end
 
@@ -1197,7 +1197,7 @@ local NumLoop = tonumber(MsgText[2])
 if NumLoop < 1 or NumLoop > 50 then 
 return "📡*¦* حدود التكرار ,  يجب ان تكون ما بين  *[2-50]*" 
 end
-redis:set(kenwa..'flood'..msg.chat_id_,MsgText[2]) 
+redis:set(A7KAN..'flood'..msg.chat_id_,MsgText[2]) 
 return "📡*¦* تم وضع التكرار » { *"..MsgText[2].."* }"
 end
 
@@ -1239,106 +1239,106 @@ end
 if MsgText[2] == "الادمنيه" then 
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
 
-local Admins = redis:scard(kenwa..'admins:'..msg.chat_id_)
+local Admins = redis:scard(A7KAN..'admins:'..msg.chat_id_)
 if Admins == 0 then  
 return "📡*¦* اوه ☢ هنالك خطأ 🚸\n📛¦ عذرا لا يوجد ادمنيه ليتم مسحهم ✓" 
 end
-redis:del(kenwa..'admins:'..msg.chat_id_)
+redis:del(A7KAN..'admins:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦ تم مسح {"..Admins.."} من الادمنيه في البوت \n✓"
 end
 
 
 if MsgText[2] == "قائمه المنع" then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local Mn3Word = redis:scard(kenwa..':Filter_Word:'..msg.chat_id_)
+local Mn3Word = redis:scard(A7KAN..':Filter_Word:'..msg.chat_id_)
 if Mn3Word == 0 then 
 return "📡*¦* عذرا لا توجد كلمات ممنوعه ليتم حذفها ✓" 
 end
-redis:del(kenwa..':Filter_Word:'..msg.chat_id_)
+redis:del(A7KAN..':Filter_Word:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n🔖¦ تم مسح {*"..Mn3Word.."*} كلمات من المنع ✓"
 end
 
 
 if MsgText[2] == "القوانين" then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-if not redis:get(kenwa..'rulse:msg'..msg.chat_id_) then 
+if not redis:get(A7KAN..'rulse:msg'..msg.chat_id_) then 
 return "📛¦ عذرا لا يوجد قوانين ليتم مسحه \n!" 
 end
-redis:del(kenwa..'rulse:msg'..msg.chat_id_)
+redis:del(A7KAN..'rulse:msg'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦ تم حذف القوانين بنجاح ✓"
 end
 
 
 if MsgText[2] == "الترحيب"  then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-if not redis:get(kenwa..'welcome:msg'..msg.chat_id_) then 
+if not redis:get(A7KAN..'welcome:msg'..msg.chat_id_) then 
 return "📡*¦* اوه ☢ هنالك خطأ 🚸\n📛¦ عذرا لا يوجد ترحيب ليتم مسحه ✓" 
 end
-redis:del(kenwa..'welcome:msg'..msg.chat_id_)
+redis:del(A7KAN..'welcome:msg'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦ تم حذف الترحيب بنجاح \n✓"
 end
 
 
 if MsgText[2] == "المنشئيين" then
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-local NumMnsha = redis:scard(kenwa..':MONSHA_BOT:'..msg.chat_id_)
+local NumMnsha = redis:scard(A7KAN..':MONSHA_BOT:'..msg.chat_id_)
 if NumMnsha ==0 then 
 return "📛¦ عذرا لا يوجد منشئيين ليتم مسحهم \n!" 
 end
-redis:del(kenwa..':MONSHA_BOT:'..msg.chat_id_)
+redis:del(A7KAN..':MONSHA_BOT:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦  تم مسح {* "..NumMnsha.." *} من المنشئيين\n✓"
 end
 
 
 if MsgText[2] == "المدراء" then
 if not msg.Creator then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local NumMDER = redis:scard(kenwa..'owners:'..msg.chat_id_)
+local NumMDER = redis:scard(A7KAN..'owners:'..msg.chat_id_)
 if NumMDER ==0 then 
 return "📛¦ عذرا لا يوجد مدراء ليتم مسحهم \n!" 
 end
-redis:del(kenwa..'owners:'..msg.chat_id_)
+redis:del(A7KAN..'owners:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦  تم مسح {* "..NumMDER.." *} من المدراء  \n✓"
 end
 
 if MsgText[2] == 'المحظورين' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
 
-local list = redis:smembers(kenwa..'banned:'..msg.chat_id_)
+local list = redis:smembers(A7KAN..'banned:'..msg.chat_id_)
 if #list == 0 then return "*📌¦ لا يوجد مستخدمين محظورين  *" end
 message = '📋*¦* قائمه الاعضاء المحظورين :\n'
 for k,v in pairs(list) do
 StatusLeft(msg.chat_id_,v)
 end 
-redis:del(kenwa..'banned:'..msg.chat_id_)
+redis:del(A7KAN..'banned:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦  تم مسح {* "..#list.." *} من المحظورين  \n✓"
 end
 
 if MsgText[2] == 'المكتومين' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local MKTOMEN = redis:scard(kenwa..'is_silent_users:'..msg.chat_id_)
+local MKTOMEN = redis:scard(A7KAN..'is_silent_users:'..msg.chat_id_)
 if MKTOMEN ==0 then 
 return "📡*¦* لا يوجد مستخدمين مكتومين في المجموعه " 
 end
-redis:del(kenwa..'is_silent_users:'..msg.chat_id_)
+redis:del(A7KAN..'is_silent_users:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦  تم مسح {* "..MKTOMEN.." *} من المكتومين  \n✓"
 end
 
 if MsgText[2] == 'المميزين' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local MMEZEN = redis:scard(kenwa..'whitelist:'..msg.chat_id_)
+local MMEZEN = redis:scard(A7KAN..'whitelist:'..msg.chat_id_)
 if MMEZEN ==0 then 
 return "*⚙️*¦ لا يوجد مستخدمين مميزين في المجموعه " 
 end
-redis:del(kenwa..'whitelist:'..msg.chat_id_)
+redis:del(A7KAN..'whitelist:'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦  تم مسح {* "..MMEZEN.." *} من المميزين  \n✓"
 end
 
 if MsgText[2] == 'الرابط' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-if not redis:get(kenwa..'linkGroup'..msg.chat_id_) then 
+if not redis:get(A7KAN..'linkGroup'..msg.chat_id_) then 
 return "*⚙️*¦ لا يوجد رابط مضاف اصلا " 
 end
-redis:del(kenwa..'linkGroup'..msg.chat_id_)
+redis:del(A7KAN..'linkGroup'..msg.chat_id_)
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."   \n📛¦ تم مسح رابط المجموعه \n✓"
 end
 
@@ -1348,7 +1348,7 @@ end
 
 if MsgText[1] == "ضع اسم" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-redis:setex(kenwa..'name:witting'..msg.sender_user_id_,300,true)
+redis:setex(A7KAN..'name:witting'..msg.sender_user_id_,300,true)
 return "📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل الاسم  للمجموعه \n🛠"
 end
 
@@ -1389,14 +1389,14 @@ end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_})
 return false
 else 
-redis:setex(kenwa..'photo:group'..msg.chat_id_..msg.sender_user_id_,300,true)
+redis:setex(A7KAN..'photo:group'..msg.chat_id_..msg.sender_user_id_,300,true)
 return '📭¦ حسننا عزيزي 🍁\n🌄 ¦ الان قم بارسال الصوره\n🛠' 
 end 
 end
 
 if MsgText[1] == "ضع وصف" then 
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-redis:setex(kenwa..'about:witting'..msg.sender_user_id_,300,true) 
+redis:setex(A7KAN..'about:witting'..msg.sender_user_id_,300,true) 
 return "📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل الوصف  للمجموعه\n🛠" 
 end
 
@@ -1530,10 +1530,10 @@ GetUserID(v.user_id_,function(arg,datax)
 if datax.type_.ID == "UserTypeDeleted" then 
 NumMemDone = NumMemDone + 1
 kick_user(v.user_id_,arg.ChatID,function(arg,data)  
-redis:srem(kenwa..':MONSHA_BOT:'..arg.ChatID,v.user_id_)
-redis:srem(kenwa..'whitelist:'..arg.ChatID,v.user_id_)
-redis:srem(kenwa..'owners:'..arg.ChatID,v.user_id_)
-redis:srem(kenwa..'admins:'..arg.ChatID,v.user_id_)
+redis:srem(A7KAN..':MONSHA_BOT:'..arg.ChatID,v.user_id_)
+redis:srem(A7KAN..'whitelist:'..arg.ChatID,v.user_id_)
+redis:srem(A7KAN..'owners:'..arg.ChatID,v.user_id_)
+redis:srem(A7KAN..'admins:'..arg.ChatID,v.user_id_)
 end)
 end
 NumMem = NumMem + 1
@@ -1554,11 +1554,11 @@ if MsgText[1] == 'شحن' and MsgText[2] then
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
 if tonumber(MsgText[2]) > 0 and tonumber(MsgText[2]) < 1001 then
 local extime = (tonumber(MsgText[2]) * 86400)
-redis:setex(kenwa..'ExpireDate:'..msg.chat_id_, extime, true)
-if not redis:get(kenwa..'CheckExpire::'..msg.chat_id_) then 
-redis:set(kenwa..'CheckExpire::'..msg.chat_id_,true) end
+redis:setex(A7KAN..'ExpireDate:'..msg.chat_id_, extime, true)
+if not redis:get(A7KAN..'CheckExpire::'..msg.chat_id_) then 
+redis:set(A7KAN..'CheckExpire::'..msg.chat_id_,true) end
 sendMsg(msg.chat_id_,msg.id_,'💂🏻‍♀️¦ تم شحن الاشتراك الى `'..MsgText[2]..'` يوم   ... 👍🏿')
-sendMsg(SUDO_ID,0,'💂🏻‍♀️¦ تم شحن الاشتراك الى `'..MsgText[2]..'` يوم   ... 👍🏿\n🕵🏼️‍♀️¦ في مجموعه  » »  '..redis:get(kenwa..'group:name'..msg.chat_id_))
+sendMsg(SUDO_ID,0,'💂🏻‍♀️¦ تم شحن الاشتراك الى `'..MsgText[2]..'` يوم   ... 👍🏿\n🕵🏼️‍♀️¦ في مجموعه  » »  '..redis:get(A7KAN..'group:name'..msg.chat_id_))
 else
 sendMsg(msg.chat_id_,msg.id_,'💂🏻‍♀️¦ عزيزي المطور ✋🏿\n👨🏻‍🔧¦ شحن الاشتراك يكون ما بين يوم الى 1000 يوم فقط 🍃')
 end 
@@ -1568,25 +1568,25 @@ end
 if MsgText[1] == 'الاشتراك' and MsgText[2] then 
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
 if MsgText[2] == '1' then
-redis:setex(kenwa..'ExpireDate:'..msg.chat_id_, 2592000, true)
-if not redis:get(kenwa..'CheckExpire::'..msg.chat_id_) then 
-redis:set(kenwa..'CheckExpire::'..msg.chat_id_,true) 
+redis:setex(A7KAN..'ExpireDate:'..msg.chat_id_, 2592000, true)
+if not redis:get(A7KAN..'CheckExpire::'..msg.chat_id_) then 
+redis:set(A7KAN..'CheckExpire::'..msg.chat_id_,true) 
 end
 sendMsg(msg.chat_id_,msg.id_,'💂🏻‍♀️¦ تم تفعيل الاشتراك   👍🏿\n📆¦  الاشتراك » `30 يوم`  *(شهر)*')
 sendMsg(SUDO_ID,0,'💂🏻‍♀️¦ تم تفعيل الاشتراك  👍🏿\n📆¦  الاشتراك » `30 يوم`  *(شهر)*')
 end
 if MsgText[2] == '2' then
-redis:setex(kenwa..'ExpireDate:'..msg.chat_id_,7776000,true)
-if not redis:get(kenwa..'CheckExpire::'..msg.chat_id_) then 
-redis:set(kenwa..'CheckExpire::'..msg.chat_id_,true) 
+redis:setex(A7KAN..'ExpireDate:'..msg.chat_id_,7776000,true)
+if not redis:get(A7KAN..'CheckExpire::'..msg.chat_id_) then 
+redis:set(A7KAN..'CheckExpire::'..msg.chat_id_,true) 
 end
 sendMsg(msg.chat_id_,msg.id_,'💂🏻‍♀️¦ تم تفعيل الاشتراك   👍🏿\n📆¦  الاشتراك » `90 يوم`  *(3 اشهر)*')
 sendMsg(SUDO_ID,0,'💂🏻‍♀️¦ تم تفعيل الاشتراك   👍🏿\n📆¦  الاشتراك » `90 يوم`  *(3 اشهر)*')
 end
 if MsgText[2] == '3' then
-redis:set(kenwa..'ExpireDate:'..msg.chat_id_,true)
-if not redis:get(kenwa..'CheckExpire::'..msg.chat_id_) then 
-redis:set(kenwa..'CheckExpire::'..msg.chat_id_,true) end
+redis:set(A7KAN..'ExpireDate:'..msg.chat_id_,true)
+if not redis:get(A7KAN..'CheckExpire::'..msg.chat_id_) then 
+redis:set(A7KAN..'CheckExpire::'..msg.chat_id_,true) end
 sendMsg(msg.chat_id_,msg.id_,'💂🏻‍♀️¦ تم تفعيل الاشتراك   👍🏿\n📆¦  الاشتراك » `مفتوح`  *(مدى الحياة)*')
 sendMsg(SUDO_ID,0,'💂🏻‍♀️¦ تم تفعيل الاشتراك   👍🏿\n📆¦  الاشتراك » `مفتوح`  *(مدى الحياة)*')
 end 
@@ -1595,7 +1595,7 @@ end
 
 if MsgText[1] == 'الاشتراك' and not MsgText[2] and msg.Admin then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-local check_time = redis:ttl(kenwa..'ExpireDate:'..msg.chat_id_)
+local check_time = redis:ttl(A7KAN..'ExpireDate:'..msg.chat_id_)
 if check_time < 0 then return '*مـفـتـوح *🎖\n✓' end
 year = math.floor(check_time / 31536000)
 byear = check_time % 31536000 
@@ -1637,15 +1637,15 @@ if arg.UserID == our_id then
 Getrtb = 'ادمن' 
 elseif  arg.UserID == SUDO_ID then
 Getrtb = 'مطور اساسي ' 
-elseif redis:sismember(kenwa..':SUDO_BOT:',arg.UserID) then
+elseif redis:sismember(A7KAN..':SUDO_BOT:',arg.UserID) then
 Getrtb = 'مطور ' 
-elseif redis:sismember(kenwa..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then
+elseif redis:sismember(A7KAN..':MONSHA_BOT:'..arg.ChatID,arg.UserID) then
 Getrtb = 'منشئ' 
-elseif redis:sismember(kenwa..'owners:'..arg.ChatID,arg.UserID) then
+elseif redis:sismember(A7KAN..'owners:'..arg.ChatID,arg.UserID) then
 Getrtb = 'المدير ' 
-elseif redis:sismember(kenwa..'admins:'..arg.ChatID,arg.UserID) then
+elseif redis:sismember(A7KAN..'admins:'..arg.ChatID,arg.UserID) then
 Getrtb = 'ادمن' 
-elseif redis:sismember(kenwa..'whitelist:'..arg.ChatID,arg.UserID) then
+elseif redis:sismember(A7KAN..'whitelist:'..arg.ChatID,arg.UserID) then
 Getrtb = 'مميز' 
 else
 Getrtb = 'عضو' 
@@ -1674,15 +1674,15 @@ end
 
 if MsgText[1]== 'رسائلي' or MsgText[1] == 'رسايلي' or MsgText[1] == 'احصائياتي'  then
 GetUserID(msg.sender_user_id_,function(arg,data)
-local msgs = (redis:get(kenwa..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_) or 0)
-local NumGha = (redis:get(kenwa..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local photo = (redis:get(kenwa..':photo:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local sticker = (redis:get(kenwa..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local voice = (redis:get(kenwa..':voice:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local audio = (redis:get(kenwa..':audio:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local animation = (redis:get(kenwa..':animation:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local edited = (redis:get(kenwa..':edited:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local video = (redis:get(kenwa..':video:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local msgs = (redis:get(A7KAN..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_) or 0)
+local NumGha = (redis:get(A7KAN..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local photo = (redis:get(A7KAN..':photo:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local sticker = (redis:get(A7KAN..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local voice = (redis:get(A7KAN..':voice:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local audio = (redis:get(A7KAN..':audio:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local animation = (redis:get(A7KAN..':animation:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local edited = (redis:get(A7KAN..':edited:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local video = (redis:get(A7KAN..':video:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
 
 local Get_info =  "⠀\n⠀•⊱ { الاحـصـائـيـات الـرسـائـل } ⊰•\n"
 .."💬¦ الـرسـائـل •⊱ { `"..msgs.."` } ⊰•\n"
@@ -1702,25 +1702,25 @@ return false
 end
 
 if MsgText[1]== 'جهاتي' then
-return '🧟‍♂*¦*  عدد جهہآتگ آلمـضـآفهہ‏‏ » 【'..(redis:get(kenwa..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)..'】 . \n🐾'
+return '🧟‍♂*¦*  عدد جهہآتگ آلمـضـآفهہ‏‏ » 【'..(redis:get(A7KAN..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)..'】 . \n🐾'
 end
 
 if MsgText[1] == 'معلوماتي' or MsgText[1] == 'موقعي' then
 GetUserID(msg.sender_user_id_,function(arg,data)
-local msgs = (redis:get(kenwa..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_) or 0)
-local NumGha = (redis:get(kenwa..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local photo = (redis:get(kenwa..':photo:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local sticker = (redis:get(kenwa..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local voice = (redis:get(kenwa..':voice:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local audio = (redis:get(kenwa..':audio:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local animation = (redis:get(kenwa..':animation:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local edited = (redis:get(kenwa..':edited:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
-local video = (redis:get(kenwa..':video:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local msgs = (redis:get(A7KAN..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_) or 0)
+local NumGha = (redis:get(A7KAN..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local photo = (redis:get(A7KAN..':photo:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local sticker = (redis:get(A7KAN..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local voice = (redis:get(A7KAN..':voice:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local audio = (redis:get(A7KAN..':audio:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local animation = (redis:get(A7KAN..':animation:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local edited = (redis:get(A7KAN..':edited:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
+local video = (redis:get(A7KAN..':video:'..msg.chat_id_..':'..msg.sender_user_id_) or 0)
 USERNAME = ""
 Name = data.first_name_
 if data.last_name_ then Name = data.first_name_ .." "..data.last_name_ end
 if data.username_ then USERNAME = "💠¦ المعرف •⊱ @["..data.username_.."] ⊰•\n" end 
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "👨🏻‍💻¦ مـطـور البوت •⊱ "..SUDO_USER.." ⊰•\n"
 else
@@ -1772,14 +1772,14 @@ end
 
 if MsgText[1] == "ضع الترحيب" then 
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-redis:set(kenwa..'welcom:witting'..msg.sender_user_id_,true) 
+redis:set(A7KAN..'welcom:witting'..msg.sender_user_id_,true) 
 return "📭¦ حسننا عزيزي  ✋🏿\n🗯¦ ارسل كليشه الترحيب الان\n\n🔖¦ ملاحظه تستطيع اضافه دوال للترحيب مثلا :\n🗒¦ اضهار قوانين المجموعه  » *{القوانين}*  \n📰¦  اضهار الاسم العضو » *{الاسم}*\n🏷¦ اضهار المعرف العضو » *{المعرف}*\n🏷¦ اضهار اسم المجموعه » *{المجموعه}*" 
 end
 
 if MsgText[1] == "الترحيب" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-if redis:get(kenwa..'welcome:msg'..msg.chat_id_)  then
-return Flter_Markdown(redis:get(kenwa..'welcome:msg'..msg.chat_id_))
+if redis:get(A7KAN..'welcome:msg'..msg.chat_id_)  then
+return Flter_Markdown(redis:get(A7KAN..'welcome:msg'..msg.chat_id_))
 else 
 return "🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."  \n🌿¦ نورت المجموعه \n💂🏼‍♀️" 
 end 
@@ -1805,19 +1805,19 @@ end -- end of insert group
 
 if MsgText[1] == 'مسح' and MsgText[2] == 'المطورين'  then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-local mtwren = redis:scard(kenwa..':SUDO_BOT:')
+local mtwren = redis:scard(A7KAN..':SUDO_BOT:')
 if mtwren == 0 then  return "⚙️*¦* عذرا لا يوجد مطورين في البوت  ✖️" end
-redis:del(kenwa..':SUDO_BOT:') 
+redis:del(A7KAN..':SUDO_BOT:') 
 return "📛*¦* تم مسح {* "..mtwren.." *} من المطورين ☔️\n✓"
 end
 
 if MsgText[1] == 'مسح' and MsgText[2] == "قائمه العام"  then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-local addbannds = redis:scard(kenwa..'gban_users')
+local addbannds = redis:scard(A7KAN..'gban_users')
 if addbannds ==0 then 
 return "*⚙️¦ قائمة الحظر فارغه .*" 
 end
-redis:del(kenwa..'gban_users') 
+redis:del(A7KAN..'gban_users') 
 return "⚙️*¦* تـم مـسـح { *"..addbannds.." *} من قائمه العام\n✓" 
 end 
 
@@ -1835,12 +1835,12 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME)
-if redis:sismember(kenwa..':SUDO_BOT:',arg.UserID) then 
+if redis:sismember(A7KAN..':SUDO_BOT:',arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد مطور \n✓️',12,USERCAR) 
 else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم ترقيته ليصبح مطور \n✓️',12,USERCAR) 
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..':SUDO_BOT:',arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..':SUDO_BOT:',arg.UserID)
 end
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
 end,{ChatID=msg.chat_id_,MsgID=msg.id_})
@@ -1851,11 +1851,11 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+if redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد مطور \n✓') 
 else
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:sadd(kenwa..':SUDO_BOT:',UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:sadd(A7KAN..':SUDO_BOT:',UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم ترقيته ليصبح مطور \n✓')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -1875,11 +1875,11 @@ GetUserID(UserID,function(arg,data)
 USERNAME = ResolveUserName(data)
 USERNAME = USERNAME:gsub([[\_]],"_")
 USERCAR = utf8.len(USERNAME)
-if not redis:sismember(kenwa..':SUDO_BOT:',arg.UserID) then 
+if not redis:sismember(A7KAN..':SUDO_BOT:',arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ انه بالتأكيد ليس مطور \n✓️',12,utf8.len(USERNAME)) 
 else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم تنزيله من المطورين \n✓️',12,utf8.len(USERNAME)) 
-redis:srem(kenwa..':SUDO_BOT:',arg.UserID)
+redis:srem(A7KAN..':SUDO_BOT:',arg.UserID)
 end  
 end,{ChatID=arg.ChatID,UserID=UserID,MsgID=arg.MsgID})
 end,{ChatID=msg.chat_id_,MsgID=msg.id_})
@@ -1889,10 +1889,10 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+if not redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* انه بالتأكيد ليس مطور \n✓')
 else
-redis:srem(kenwa..':SUDO_BOT:',UserID)
+redis:srem(A7KAN..':SUDO_BOT:',UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم تنزيله من المطورين \n✓') 
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -1904,7 +1904,7 @@ return false
 end
 
 if MsgText[1] == "تنظيف المجموعات" then
-local groups = redis:smembers(kenwa..'group:ids')
+local groups = redis:smembers(A7KAN..'group:ids')
 local GroupsIsFound = 0
 for i = 1, #groups do 
 GroupTitle(groups[i],function(arg,data)
@@ -1930,7 +1930,7 @@ return false
 end
 
 if MsgText[1] == "تنظيف المشتركين" then
-local pv = redis:smembers(kenwa..'users')
+local pv = redis:smembers(A7KAN..'users')
 local NumPvDel = 0
 for i = 1, #pv do
 sendChatAction(pv[i],"Typing",function(arg,data)
@@ -1938,7 +1938,7 @@ if data.ID and data.ID == "Ok"  then
 print("Sender Ok")
 else
 print("Failed Sender Nsot Ok")
-redis:srem(kenwa..'users',arg.pv)
+redis:srem(A7KAN..'users',arg.pv)
 NumPvDel = NumPvDel + 1
 end
 print(arg.pvC.." : "..arg.i)
@@ -1956,7 +1956,7 @@ return false
 end
 
 if MsgText[1] == "ضع صوره للترحيب" or MsgText[1]=="ضع صوره للترحيب 🌄" then
-redis:setex(kenwa..'welcom_ph:witting'..msg.sender_user_id_,300,true) 
+redis:setex(A7KAN..'welcom_ph:witting'..msg.sender_user_id_,300,true) 
 return'📭¦ حسننا عزيزي 🍁\n🌄 ¦ الان قم بارسال الصوره للترحيب \n🛠' 
 end
 
@@ -1969,15 +1969,15 @@ return unlock_service(msg)
 end
 
 if MsgText[1] == "صوره الترحيب" then
-local Photo_Weloame = redis:get(kenwa..':WELCOME_BOT')
+local Photo_Weloame = redis:get(A7KAN..':WELCOME_BOT')
 if Photo_Weloame then
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "⚖️¦ مـعرف آلمـطـور  » "..SUDO_USER:gsub([[\_]],'_').." 🌿\n👨🏽‍🔧"
 else
 SUDO_USER = ""
 end
-sendPhoto(msg.chat_id_,msg.id_,Photo_Weloame,[[💯¦ مـرحبآ آنآ بوت آسـمـي ]]..redis:get(kenwa..':NameBot:')..[[ 🎖
+sendPhoto(msg.chat_id_,msg.id_,Photo_Weloame,[[💯¦ مـرحبآ آنآ بوت آسـمـي ]]..redis:get(A7KAN..':NameBot:')..[[ 🎖
 💰¦ آختصـآصـي حمـآيهہ‏‏ آلمـجمـوعآت
 📛¦ مـن آلسـبآم وآلتوجيهہ‏‏ وآلتگرآر وآلخ...
 ]]..SUDO_USER) 
@@ -1988,23 +1988,23 @@ end
 end
 
 if MsgText[1] == "ضع كليشه المطور" then 
-redis:setex(kenwa..'text_sudo:witting'..msg.sender_user_id_,1200,true) 
+redis:setex(A7KAN..'text_sudo:witting'..msg.sender_user_id_,1200,true) 
 return '📭¦ حسننا عزيزي 🍁\n💬¦ الان قم بارسال الكليشه \n🛠' 
 end
 
 if MsgText[1] == "ضع شرط التفعيل" and MsgText[2] and MsgText[2]:match('^%d+$') then 
-redis:set(kenwa..':addnumberusers',MsgText[2]) 
+redis:set(A7KAN..':addnumberusers',MsgText[2]) 
 return '💱*¦* تم وضـع شـرط آلتفعيل آلبوت آذآ گآنت آلمـجمـوعهہ‏‏ آگثر مـن *【'..MsgText[2]..'】* عضـو  🍁\n' 
 end
 
 if MsgText[1] == "شرط التفعيل" then 
-return'🚸*¦* شـرط آلتفعيل آلبوت آذآ گآنت آلمـجمـوعهہ‏‏ آگثر مـن *【'..redis:get(kenwa..':addnumberusers')..'】* عضـو  🍁\n' 
+return'🚸*¦* شـرط آلتفعيل آلبوت آذآ گآنت آلمـجمـوعهہ‏‏ آگثر مـن *【'..redis:get(A7KAN..':addnumberusers')..'】* عضـو  🍁\n' 
 end 
 end
 
 if MsgText[1] == 'المجموعات' or MsgText[1] == "المجموعات 🔝" then 
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-return '📮*¦* عدد المجموعات المفعلة » `'..redis:scard(kenwa..'group:ids')..'`  ➼' 
+return '📮*¦* عدد المجموعات المفعلة » `'..redis:scard(A7KAN..'group:ids')..'`  ➼' 
 end
 
 if MsgText[1] == 'قائمه المجموعات' then 
@@ -2014,10 +2014,10 @@ end
 
 if MsgText[1] == 'تعطيل' and MsgText[2] and MsgText[2]:match("-100(%d+)") then
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-local name_gp = redis:get(kenwa..'group:name'..MsgText[2])
+local name_gp = redis:get(A7KAN..'group:name'..MsgText[2])
 GroupTitle(MsgText[2],function(arg,data)
 if data.ID and data.ID == "Error" and data.message_ == "CHANNEL_INVALID" then
-if redis:sismember(kenwa..'group:ids',arg.Group) then
+if redis:sismember(A7KAN..'group:ids',arg.Group) then
 rem_data_group(arg.Group)
 sendMsg(arg.chat_id_,arg.id_,'📛*¦* البوت ليس بالمجموعة ولكن تم مسح بياناتها \n🏷*¦* المجموعةة » ['..arg.name_gp..']\n🎫*¦* الايدي » ( *'..arg.Group..'* )\n✓')
 else 
@@ -2025,7 +2025,7 @@ sendMsg(arg.chat_id_,arg.id_,'📛*¦* البوت ليس مفعل بالمجمو
 end
 else
 StatusLeft(arg.Group,our_id)
-if redis:sismember(kenwa..'group:ids',arg.Group) then
+if redis:sismember(A7KAN..'group:ids',arg.Group) then
 sendMsg(arg.Group,0,'📛*¦* تم تعطيل المجموعه بأمر من المطور  \n🚸*¦* سوف اغادر جاوو 🚶🏻🚶🏻 ...\n✘')
 rem_data_group(arg.Group)
 sendMsg(arg.chat_id_,arg.id_,'📛*¦* تم تعطيل المجموعه ومغادرتها \n🏷*¦* المجموعةة » ['..arg.name_gp..']\n🎫*¦* الايدي » ( *'..arg.Group..'* )\n✓')
@@ -2038,42 +2038,42 @@ return false
 end
 
 if MsgText[1] == 'المطور' then
-return redis:get(kenwa..":TEXT_SUDO") or '🗃¦ لا توجد كليشه المطور .\n📰¦ يمكنك اضافه كليشه من خلال الامر\n       " `ضع كليشه المطور` " \n📡'
+return redis:get(A7KAN..":TEXT_SUDO") or '🗃¦ لا توجد كليشه المطور .\n📰¦ يمكنك اضافه كليشه من خلال الامر\n       " `ضع كليشه المطور` " \n📡'
 end
 
 if MsgText[1] == "اذاعه عام بالتوجيه" or MsgText[1] == "اذاعه عام بالتوجيه 📣" then
 if not msg.SudoUser then return"📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-if not msg.SudoBase and not redis:get(kenwa..'lock_brod') then 
+if not msg.SudoBase and not redis:get(A7KAN..'lock_brod') then 
 return "📡*¦* الاذاعه مقفوله من قبل المطور الاساسي  🚶" 
 end
-redis:setex(kenwa..'fwd:'..msg.sender_user_id_,300, true) 
+redis:setex(A7KAN..'fwd:'..msg.sender_user_id_,300, true) 
 return "📭¦ حسننا الان ارسل التوجيه للاذاعه \n🔛" 
 end
 
 if MsgText[1] == "اذاعه عام" or MsgText[1] == "اذاعه عام 📢" then		
 if not msg.SudoUser then return"📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-if not msg.SudoBase and not redis:get(kenwa..'lock_brod') then 
+if not msg.SudoBase and not redis:get(A7KAN..'lock_brod') then 
 return "📡*¦* الاذاعه مقفوله من قبل المطور الاساسي  🚶" 
 end
-redis:setex(kenwa..'fwd:all'..msg.sender_user_id_,300, true) 
+redis:setex(A7KAN..'fwd:all'..msg.sender_user_id_,300, true) 
 return "📭¦ حسننا الان ارسل الكليشه للاذاعه عام \n🔛" 
 end
 
 if MsgText[1] == "اذاعه خاص" or MsgText[1] == "اذاعه خاص 👤" then		
 if not msg.SudoUser then return "📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-if not msg.SudoBase and not redis:get(kenwa..'lock_brod') then 
+if not msg.SudoBase and not redis:get(A7KAN..'lock_brod') then 
 return "📡*¦* الاذاعه مقفوله من قبل المطور الاساسي  🚶" 
 end
-redis:setex(kenwa..'fwd:pv'..msg.sender_user_id_,300, true) 
+redis:setex(A7KAN..'fwd:pv'..msg.sender_user_id_,300, true) 
 return "📭¦ حسننا الان ارسل الكليشه للاذاعه خاص \n🔛"
 end
 
 if MsgText[1] == "اذاعه" or MsgText[1] == "اذاعه 🗣" then		
 if not msg.SudoUser then return"📛*¦* هذا الامر يخص {المطور} فقط  \n🚶" end
-if not msg.SudoBase and not redis:get(kenwa..'lock_brod') then 
+if not msg.SudoBase and not redis:get(A7KAN..'lock_brod') then 
 return "📡*¦* الاذاعه مقفوله من قبل المطور الاساسي  🚶" 
 end
-redis:setex(kenwa..'fwd:groups'..msg.sender_user_id_,300, true) 
+redis:setex(A7KAN..'fwd:groups'..msg.sender_user_id_,300, true) 
 return "📭¦ حسننا الان ارسل الكليشه للاذاعه للمجموعات \n🔛" 
 end
 
@@ -2108,7 +2108,7 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور الاساسي\n🛠")
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور\n🛠") 
 end
 GetUserID(UserID,function(arg,data)
@@ -2117,8 +2117,8 @@ USERCAR = utf8.len(USERNAME)
 if GeneralBanned(arg.UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..USERNAME..' \n🎫*¦* الايدي » (`'..arg.UserID..'`)\n🛠*¦*  تم بالتأكيد حظره عام \n✓️') 
 else
-redis:hset(kenwa..'username:'..arg.UserID,'username',USERNAME)
-redis:sadd(kenwa..'gban_users',arg.UserID)
+redis:hset(A7KAN..'username:'..arg.UserID,'username',USERNAME)
+redis:sadd(A7KAN..'gban_users',arg.UserID)
 kick_user(arg.UserID,arg.ChatID)
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم حظره عام \n✓️',12,utf8.len(USERNAME)) 
 end
@@ -2135,14 +2135,14 @@ if UserID == our_id then
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور الاساسي\n🛠")
-elseif redis:sismember(kenwa..':SUDO_BOT:',UserID) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',UserID) then 
 return sendMsg(arg.ChatID,arg.MsgID,"👤*¦* لا يمكنك حظر المطور\n🛠") 
 end
-if redis:sismember(kenwa..'gban_users',UserID) then 
+if redis:sismember(A7KAN..'gban_users',UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد حظره عام \n✓️') 
 else
-redis:hset(kenwa..'username:'..UserID,'username',UserName)
-redis:sadd(kenwa..'gban_users',UserID)
+redis:hset(A7KAN..'username:'..UserID,'username',UserName)
+redis:sadd(A7KAN..'gban_users',UserID)
 kick_user(UserID,arg.ChatID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم حظره عام \n✓️')
 end
@@ -2166,7 +2166,7 @@ USERNAME = ResolveUserName(data)
 USERCAR = utf8.len(USERNAME)
 if GeneralBanned(arg.UserID) then 
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم الغاء حظره العام \n✓️',12,utf8.len(USERNAME)) 
-redis:srem(kenwa..'gban_users',arg.UserID)
+redis:srem(A7KAN..'gban_users',arg.UserID)
 else
 SendMention(arg.ChatID,arg.UserID,arg.MsgID,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..arg.UserID..'}\n🛠¦ تم بالتأكيد الغاء حظره العام \n✓️',12,utf8.len(USERNAME))
 end
@@ -2181,10 +2181,10 @@ GetUserName(MsgText[2],function(arg,data)
 if not data.id_ then return sendMsg(arg.ChatID,arg.MsgID,"📛*¦* لآ يوجد عضـو بهہ‌‏ذآ آلمـعرف \n❕") end 
 local UserID = data.id_
 UserName = Flter_Markdown(arg.UserName)
-if not redis:sismember(kenwa..'gban_users',UserID) then 
+if not redis:sismember(A7KAN..'gban_users',UserID) then 
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦* تم بالتأكيد الغاء حظره العام \n✓️') 
 else
-redis:srem(kenwa..'gban_users',UserID)
+redis:srem(A7KAN..'gban_users',UserID)
 sendMsg(arg.ChatID,arg.MsgID,'👤*¦* العضو » '..UserName..' \n🎫*¦* الايدي » (`'..UserID..'`)\n🛠*¦*  تم الغاء حظره العام \n✓️')
 end
 end,{ChatID=msg.chat_id_,MsgID=msg.id_,UserName=MsgText[2]})
@@ -2197,22 +2197,22 @@ if MsgText[1] == "رتبتي" then return '🎫*¦* رتبتك » '..msg.TheRank
 ----------------- استقبال الرسائل ---------------
 if MsgText[1] == "الغاء الامر ✖️" or MsgText[1] == "الغاء" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-redis:del(kenwa..'welcom:witting'..msg.sender_user_id_,
-kenwa..'rulse:witting'..msg.sender_user_id_,
-kenwa..'rulse:witting'..msg.sender_user_id_,
-kenwa..'name:witting'..msg.sender_user_id_,
-kenwa..'about:witting'..msg.sender_user_id_,
-kenwa..'fwd:all'..msg.sender_user_id_,
-kenwa..'fwd:pv'..msg.sender_user_id_,
-kenwa..'fwd:groups'..msg.sender_user_id_,
-kenwa..'namebot:witting'..msg.sender_user_id_,
-kenwa..'addrd_all:'..msg.sender_user_id_,
-kenwa..'delrd:'..msg.sender_user_id_,
-kenwa..'addrd:'..msg.sender_user_id_,
-kenwa..'delrdall:'..msg.sender_user_id_,
-kenwa..'text_sudo:witting'..msg.sender_user_id_,
-kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_,
-kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:del(A7KAN..'welcom:witting'..msg.sender_user_id_,
+A7KAN..'rulse:witting'..msg.sender_user_id_,
+A7KAN..'rulse:witting'..msg.sender_user_id_,
+A7KAN..'name:witting'..msg.sender_user_id_,
+A7KAN..'about:witting'..msg.sender_user_id_,
+A7KAN..'fwd:all'..msg.sender_user_id_,
+A7KAN..'fwd:pv'..msg.sender_user_id_,
+A7KAN..'fwd:groups'..msg.sender_user_id_,
+A7KAN..'namebot:witting'..msg.sender_user_id_,
+A7KAN..'addrd_all:'..msg.sender_user_id_,
+A7KAN..'delrd:'..msg.sender_user_id_,
+A7KAN..'addrd:'..msg.sender_user_id_,
+A7KAN..'delrdall:'..msg.sender_user_id_,
+A7KAN..'text_sudo:witting'..msg.sender_user_id_,
+A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_,
+A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return '📬*¦* تم آلغآء آلآمـر بنجآح \n🌿'
 end  
 
@@ -2231,7 +2231,7 @@ local GetVerison = https.request('https://raw.githubusercontent.com/Aekan8/Tools
 if GetVerison > version then
 UpdateSourceStart = true
 sendMsg(msg.chat_id_,msg.id_,'🔛*¦* يوجد تحديث جديد الان \n📡*¦* جاري تنزيل وتثبيت التحديث  ...')
-redis:set(kenwa..":VERSION",GetVerison)
+redis:set(A7KAN..":VERSION",GetVerison)
 return false
 else
 return "🔖| الاصدار الحالي : *v"..version.."* \n👨🏾‍🔧*¦* لديـك احدث اصدار \n📦"
@@ -2292,42 +2292,42 @@ end
 if (MsgText[1]== "ايدي" or MsgText[1]=="ايدي 🆔") and msg.type == "pv" then return  "\n"..msg.sender_user_id_.."\n"  end
 
 if MsgText[1]== "قناة السورس 📡" and msg.type == "pv" then
-local inline = {{{text="كـورس : كينوا 🍃",url="t.me/KENWA"}}}
-send_key(msg.sender_user_id_,'  [قناة السورس : كينوا](t.me/KENWA)',nil,inline,msg.id_)
+local inline = {{{text="كـورس : كينوا 🍃",url="t.me/A7KAN"}}}
+send_key(msg.sender_user_id_,'  [قناة السورس : كينوا](t.me/A7KAN)',nil,inline,msg.id_)
 return false
 end
 
 if (MsgText[1]== "الاحصائيات 📈" or MsgText[1]=="الاحصائيات") then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-return 'الاحصائيات : 📈 \n\n👥*¦* عدد المجموعات المفعله : '..redis:scard(kenwa..'group:ids')..'\n👤*¦* عدد المشتركين في البوت : '..redis:scard(kenwa..'users')..'\n📡'
+return 'الاحصائيات : 📈 \n\n👥*¦* عدد المجموعات المفعله : '..redis:scard(A7KAN..'group:ids')..'\n👤*¦* عدد المشتركين في البوت : '..redis:scard(A7KAN..'users')..'\n📡'
 end
      
 ---------------[End Function data] -----------------------
 if MsgText[1]=="اضف رد عام" or MsgText[1]=="اضف رد عام ➕" then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-redis:setex(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_,300,true)
-redis:del(kenwa..'allreplay:'..msg.chat_id_..msg.sender_user_id_)
+redis:setex(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_,300,true)
+redis:del(A7KAN..'allreplay:'..msg.chat_id_..msg.sender_user_id_)
 return "📭¦ حسننا الان ارسل كلمة الرد العام 🍃\n"
 end
 
 if MsgText[1]== 'مسح' and MsgText[2]== 'الردود' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local names 	= redis:exists(kenwa..'replay:'..msg.chat_id_)
-local photo 	= redis:exists(kenwa..'replay_photo:group:'..msg.chat_id_)
-local voice 	= redis:exists(kenwa..'replay_voice:group:'..msg.chat_id_)
-local imation   = redis:exists(kenwa..'replay_animation:group:'..msg.chat_id_)
-local audio	 	= redis:exists(kenwa..'replay_audio:group:'..msg.chat_id_)
-local sticker 	= redis:exists(kenwa..'replay_sticker:group:'..msg.chat_id_)
-local video 	= redis:exists(kenwa..'replay_video:group:'..msg.chat_id_)
+local names 	= redis:exists(A7KAN..'replay:'..msg.chat_id_)
+local photo 	= redis:exists(A7KAN..'replay_photo:group:'..msg.chat_id_)
+local voice 	= redis:exists(A7KAN..'replay_voice:group:'..msg.chat_id_)
+local imation   = redis:exists(A7KAN..'replay_animation:group:'..msg.chat_id_)
+local audio	 	= redis:exists(A7KAN..'replay_audio:group:'..msg.chat_id_)
+local sticker 	= redis:exists(A7KAN..'replay_sticker:group:'..msg.chat_id_)
+local video 	= redis:exists(A7KAN..'replay_video:group:'..msg.chat_id_)
 if names or photo or voice or imation or audio or sticker or video then
-redis:del(kenwa..'replay:'..msg.chat_id_,
-kenwa..'replay_photo:group:'..msg.chat_id_,
-kenwa..'replay_voice:group:'..msg.chat_id_,
-kenwa..'replay_animation:group:'..msg.chat_id_,
-kenwa..'replay_audio:group:'..msg.chat_id_,
-kenwa..'replay_sticker:group:'..msg.chat_id_,
-kenwa..'replay_video:group:'..msg.chat_id_,
-kenwa..':caption_replay:'..msg.chat_id_)
+redis:del(A7KAN..'replay:'..msg.chat_id_,
+A7KAN..'replay_photo:group:'..msg.chat_id_,
+A7KAN..'replay_voice:group:'..msg.chat_id_,
+A7KAN..'replay_animation:group:'..msg.chat_id_,
+A7KAN..'replay_audio:group:'..msg.chat_id_,
+A7KAN..'replay_sticker:group:'..msg.chat_id_,
+A7KAN..'replay_video:group:'..msg.chat_id_,
+A7KAN..':caption_replay:'..msg.chat_id_)
 return "✓ تم مسح كل الردود 🚀"
 else
 return '🚸*¦* لا يوجد ردود ليتم مسحها \n❕'
@@ -2336,22 +2336,22 @@ end
 
 if MsgText[1]== 'مسح' and MsgText[2]== 'الردود العامه' then
 if not msg.SudoBase then return"♨️ للمطورين فقط ! 💯" end
-local names 	= redis:exists(kenwa..'replay:all')
-local photo 	= redis:exists(kenwa..'replay_photo:group:')
-local voice 	= redis:exists(kenwa..'replay_voice:group:')
-local imation 	= redis:exists(kenwa..'replay_animation:group:')
-local audio 	= redis:exists(kenwa..'replay_audio:group:')
-local sticker 	= redis:exists(kenwa..'replay_sticker:group:')
-local video 	= redis:exists(kenwa..'replay_video:group:')
+local names 	= redis:exists(A7KAN..'replay:all')
+local photo 	= redis:exists(A7KAN..'replay_photo:group:')
+local voice 	= redis:exists(A7KAN..'replay_voice:group:')
+local imation 	= redis:exists(A7KAN..'replay_animation:group:')
+local audio 	= redis:exists(A7KAN..'replay_audio:group:')
+local sticker 	= redis:exists(A7KAN..'replay_sticker:group:')
+local video 	= redis:exists(A7KAN..'replay_video:group:')
 if names or photo or voice or imation or audio or sticker or video then
-redis:del(kenwa..'replay:all',
-kenwa..'replay_photo:group:',
-kenwa..'replay_voice:group:',
-kenwa..'replay_animation:group:',
-kenwa..'replay_audio:group:',
-kenwa..'replay_sticker:group:',
-kenwa..'replay_video:group:',
-kenwa..':caption_replay_All:')
+redis:del(A7KAN..'replay:all',
+A7KAN..'replay_photo:group:',
+A7KAN..'replay_voice:group:',
+A7KAN..'replay_animation:group:',
+A7KAN..'replay_audio:group:',
+A7KAN..'replay_sticker:group:',
+A7KAN..'replay_video:group:',
+A7KAN..':caption_replay_All:')
 return "✓ تم مسح كل الردود العامه🚀"
 else
 return "لا يوجد ردود عامه ليتم مسحها ! 🚀"
@@ -2360,26 +2360,26 @@ end
 
 if MsgText[1]== 'مسح' and MsgText[2]== 'رد عام' then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-redis:set(kenwa..'delrdall:'..msg.sender_user_id_,true) 
+redis:set(A7KAN..'delrdall:'..msg.sender_user_id_,true) 
 return "📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل الرد لمسحها من  المجموعات 🍃"
 end
 
 if MsgText[1]== 'مسح' and MsgText[2]== 'رد' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-redis:set(kenwa..'delrd:'..msg.sender_user_id_,true)
+redis:set(A7KAN..'delrd:'..msg.sender_user_id_,true)
 return "📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل الرد لمسحها من  للمجموعه 🍃"
 end
 
 if MsgText[1]== 'الردود' then
 
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-local names  	= redis:hkeys(kenwa..'replay:'..msg.chat_id_)
-local photo 	= redis:hkeys(kenwa..'replay_photo:group:'..msg.chat_id_)
-local voice  	= redis:hkeys(kenwa..'replay_voice:group:'..msg.chat_id_)
-local imation 	= redis:hkeys(kenwa..'replay_animation:group:'..msg.chat_id_)
-local audio 	= redis:hkeys(kenwa..'replay_audio:group:'..msg.chat_id_)
-local sticker 	= redis:hkeys(kenwa..'replay_sticker:group:'..msg.chat_id_)
-local video 	= redis:hkeys(kenwa..'replay_video:group:'..msg.chat_id_)
+local names  	= redis:hkeys(A7KAN..'replay:'..msg.chat_id_)
+local photo 	= redis:hkeys(A7KAN..'replay_photo:group:'..msg.chat_id_)
+local voice  	= redis:hkeys(A7KAN..'replay_voice:group:'..msg.chat_id_)
+local imation 	= redis:hkeys(A7KAN..'replay_animation:group:'..msg.chat_id_)
+local audio 	= redis:hkeys(A7KAN..'replay_audio:group:'..msg.chat_id_)
+local sticker 	= redis:hkeys(A7KAN..'replay_sticker:group:'..msg.chat_id_)
+local video 	= redis:hkeys(A7KAN..'replay_video:group:'..msg.chat_id_)
 if #names==0 and #photo==0 and #voice==0 and #imation==0 and #audio==0 and #sticker==0 and #video==0 then 
 return '🚸*¦* لا يوجد ردود مضافه حاليا \n❕' 
 end
@@ -2402,13 +2402,13 @@ end
 
 if MsgText[1]== 'الردود العامه' or MsgText[1]=='الردود العامه 🗨' then
 if not msg.SudoBase then return "♨️ للمطور فقط ! 💯" end
-local names 	= redis:hkeys(kenwa..'replay:all')
-local photo 	= redis:hkeys(kenwa..'replay_photo:group:')
-local voice 	= redis:hkeys(kenwa..'replay_voice:group:')
-local imation 	= redis:hkeys(kenwa..'replay_animation:group:')
-local audio 	= redis:hkeys(kenwa..'replay_audio:group:')
-local sticker 	= redis:hkeys(kenwa..'replay_sticker:group:')
-local video 	= redis:hkeys(kenwa..'replay_video:group:')
+local names 	= redis:hkeys(A7KAN..'replay:all')
+local photo 	= redis:hkeys(A7KAN..'replay_photo:group:')
+local voice 	= redis:hkeys(A7KAN..'replay_voice:group:')
+local imation 	= redis:hkeys(A7KAN..'replay_animation:group:')
+local audio 	= redis:hkeys(A7KAN..'replay_audio:group:')
+local sticker 	= redis:hkeys(A7KAN..'replay_sticker:group:')
+local video 	= redis:hkeys(A7KAN..'replay_video:group:')
 if #names==0 and #photo==0 and #voice==0 and #imation==0 and #audio==0 and #sticker==0 and #video==0 then 
 return '🚸*¦* لا يوجد ردود مضافه حاليا \n❕' 
 end
@@ -2432,14 +2432,14 @@ end
 
 if MsgText[1]=="اضف رد" and msg.GroupActive then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-redis:setex(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_,300,true) 
-redis:del(kenwa..'replay1'..msg.chat_id_..msg.sender_user_id_)
+redis:setex(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_,300,true) 
+redis:del(A7KAN..'replay1'..msg.chat_id_..msg.sender_user_id_)
 return "📭¦ حسننا , الان ارسل كلمه الرد \n-"
 end
 
 if MsgText[1] == "ضع اسم للبوت" or MsgText[1]== 'ضع اسم للبوت ©' then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-redis:setex(kenwa..'namebot:witting'..msg.sender_user_id_,300,true)
+redis:setex(A7KAN..'namebot:witting'..msg.sender_user_id_,300,true)
 return"📭¦ حسننا عزيزي  ✋🏿\n🗯¦ الان ارسل الاسم  للبوت 🍃"
 end
 
@@ -2488,7 +2488,7 @@ end
 if msg.type == 'channel' and msg.GroupActive then
 if MsgText[1] == "الاوامر" then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = " ‏‎‏❋¦ رآسـلني للآسـتفسـآر ☜ { "..SUDO_USER.." } ✓ "
 else
@@ -2511,7 +2511,7 @@ return [[
 end
 if MsgText[1]== 'م1' then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "🗯*┇* راسلني للاستفسار 💡↭  "..SUDO_USER
 else
@@ -2560,7 +2560,7 @@ return false
 end
 if MsgText[1]== 'م2' then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "🗯*┇* راسلني للاستفسار 💡↭  "..SUDO_USER
 else
@@ -2597,7 +2597,7 @@ return false
 end
 if MsgText[1]== 'م3' then
 if not msg.Admin then return "📛*¦* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "🗯*┇* راسلني للاستفسار 💡↭  "..SUDO_USER
 else
@@ -2648,7 +2648,7 @@ return false
 end
 if MsgText[1]== "م المطور" then
 if not msg.SudoBase then return "🔅¦ للمطور الاساسي فقط  🎖" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "🗯*┇* راسلني للاستفسار 💡↭  "..SUDO_USER
 else
@@ -2680,7 +2680,7 @@ return false
 end
 if MsgText[1]== 'اوامر الرد' then
 if not msg.Director then return "📛*¦* هذا الامر يخص {المطور,المنشئ,المدير} فقط  \n🚶" end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "🗯*┇* راسلني للاستفسار 💡↭  "..SUDO_USER
 else
@@ -2721,12 +2721,12 @@ end
 
 if MsgText[1] == "سورس" or MsgText[1]=="السورس" then
 return [[
-    ⚜️┇Welcome to kenwa source
+    ⚜️┇Welcome to A7KAN source
             ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉ 
-🔱↬   [Install source](t.me/kenwa/526) 
-🔈↬   [Channel kenwa](t.me/kenwa)
+🔱↬   [Install source](t.me/A7KAN/526) 
+🔈↬   [Channel A7KAN](t.me/A7KAN)
             ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉
-👨‍💻↬   [Developer source](t.me/ii66ii) 
+👨‍💻↬   [Developer source](t.me/A3KON) 
             ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉
 ]]
 end
@@ -2752,8 +2752,8 @@ end
     _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]]
 NumFile = NumFile + 1
@@ -2819,17 +2819,17 @@ end
 
 if MsgText[1] == "تفعيل الاشتراك الاجباري" then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-if redis:get(kenwa..":UserNameChaneel") then
+if redis:get(A7KAN..":UserNameChaneel") then
 return "📑| اهلا عزيزي المطور \n🔖| الاشتراك بالتأكيد مفعل"
 else
-redis:setex(kenwa..":ForceSub:"..msg.sender_user_id_,350,true)
+redis:setex(A7KAN..":ForceSub:"..msg.sender_user_id_,350,true)
 return "📑| مرحبا بـك في نظام الاشتراك الاجباري\n🔖| الان ارسل معرف قـنـاتـك"
 end
 end
 
 if MsgText[1] == "تعطيل الاشتراك الاجباري" then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-local SubDel = redis:del(kenwa..":UserNameChaneel")
+local SubDel = redis:del(A7KAN..":UserNameChaneel")
 if SubDel == 1 then
 return "🔖| تم تعطيل الاشتراك الاجباري . \n✓"
 else
@@ -2839,7 +2839,7 @@ end
 
 if MsgText[1] == "الاشتراك الاجباري" then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-local UserChaneel = redis:get(kenwa..":UserNameChaneel")
+local UserChaneel = redis:get(A7KAN..":UserNameChaneel")
 if UserChaneel then
 return "🔖| اهلا عزيزي المطور \n🔖| الاشتراك الاجباري للقناة : ["..UserChaneel.."]\n✓"
 else
@@ -2849,7 +2849,7 @@ end
 
 if MsgText[1] == "تغيير الاشتراك الاجباري" then
 if not msg.SudoBase then return"📛*¦* هذا الامر يخص {المطور الاساسي} فقط  \n🚶" end
-redis:setex(kenwa..":ForceSub:"..msg.sender_user_id_,350,true)
+redis:setex(A7KAN..":ForceSub:"..msg.sender_user_id_,350,true)
 return "📑| مرحبا بـك في نظام الاشتراك الاجباري\n🔖| الان ارسل معرف قـنـاتـك"
 end
 
@@ -2863,8 +2863,8 @@ end
     _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]]
 
@@ -2874,12 +2874,12 @@ local function dBoss(msg)
 if msg.type == "pv" then 
 
 if not msg.SudoUser then
-local msg_pv = tonumber(redis:get(kenwa..'user:'..msg.sender_user_id_..':msgs') or 0)
+local msg_pv = tonumber(redis:get(A7KAN..'user:'..msg.sender_user_id_..':msgs') or 0)
 if msg_pv > 5 then
-redis:setex(kenwa..':mute_pv:'..msg.sender_user_id_,18000,true)   
+redis:setex(A7KAN..':mute_pv:'..msg.sender_user_id_,18000,true)   
 return sendMsg(msg.chat_id_,0,'*📛¦* تم حظرك من البوت بسبب التكرار \n🛠') 
 end
-redis:setex(kenwa..'user:'..msg.sender_user_id_..':msgs',2,msg_pv+1)
+redis:setex(A7KAN..'user:'..msg.sender_user_id_..':msgs',2,msg_pv+1)
 end
 
 if msg.text=="/start" then
@@ -2898,16 +2898,16 @@ local keyboard = {
  {"الغاء الامر ✖️"}}
 return send_key(msg.sender_user_id_,text,keyboard,nil,msg.id_)
 else
-redis:sadd(kenwa..'users',msg.sender_user_id_)
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+redis:sadd(A7KAN..'users',msg.sender_user_id_)
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "⚖️¦ مـعرف آلمـطـور  : "..SUDO_USER
 else
 SUDO_USER = ""
 end
 
-if redis:get(kenwa..'lock_service') then 
-text = [[💯¦ مـرحبآ آنآ بوت آسـمـي []]..redis:get(kenwa..':NameBot:')..[[] 🎖
+if redis:get(A7KAN..'lock_service') then 
+text = [[💯¦ مـرحبآ آنآ بوت آسـمـي []]..redis:get(A7KAN..':NameBot:')..[[] 🎖
 💰¦ آختصـآصـي حمـآيهہ‏‏ آلمـجمـوعآت
 📛¦ مـن آلسـبآم وآلتوجيهہ‏‏ وآلتگرآر وآلخ...
 🚸¦ البوت خدمي ومتاح للكل 
@@ -2918,7 +2918,7 @@ text = [[💯¦ مـرحبآ آنآ بوت آسـمـي []]..redis:get(kenwa..':
 
 👨🏽‍🔧]]
 else
-text = [[💯¦ مـرحبآ آنآ بوت آسـمـي []]..redis:get(kenwa..':NameBot:')..[[] 🎖
+text = [[💯¦ مـرحبآ آنآ بوت آسـمـي []]..redis:get(A7KAN..':NameBot:')..[[] 🎖
 💰¦ آختصـآصـي حمـآيهہ‏‏ آلمـجمـوعآت
 📛¦ مـن آلسـبآم وآلتوجيهہ‏‏ وآلتگرآر وآلخ...
 🚸¦ فقط آلمـطـور يسـتطـيع تفعيل آلبوت
@@ -2939,7 +2939,7 @@ if msg.reply_id then
 GetMsgInfo(msg.chat_id_,msg.reply_id,function(arg,data)
 if not data.forward_info_ then return false end
 local FwdUser = data.forward_info_.sender_user_id_
-local MSG_ID = (redis:get(kenwa.."USER_MSG_TWASEL"..data.forward_info_.date_) or 1)
+local MSG_ID = (redis:get(A7KAN.."USER_MSG_TWASEL"..data.forward_info_.date_) or 1)
 msg = arg.msg
 local SendOk = false
 if data.content_.ID == "MessageDocument" then return false end
@@ -2979,17 +2979,17 @@ end
 end,{msg=msg})
 end
 else
-if not redis:get(kenwa..'lock_twasel') then
+if not redis:get(A7KAN..'lock_twasel') then
 if msg.forward_info_ or msg.content_.ID == "MessageSticker" or msg.content_.ID == "MessageUnsupported" or msg.content_.ID == "MessageDocument" then
 return sendMsg(msg.chat_id_,msg.id_,"📛¦ عذرآ لآ يمـگنگ آرسـآل {ملف , توجيه‌‏ , مـلصـق , فديو گآم} ❗️")
 end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "\n🏌 "..SUDO_USER
 else
 SUDO_USER = ""
 end
-redis:setex(kenwa.."USER_MSG_TWASEL"..msg.date_,43200,msg.id_)
+redis:setex(A7KAN.."USER_MSG_TWASEL"..msg.date_,43200,msg.id_)
 sendMsg(msg.chat_id_,msg.id_,"🗯¦ تم آرسـآل رسـآلتگ آلى آلمـطـور\n📬¦ سـآرد عليگ في آقرب وقت"..SUDO_USER)
 fwdMsg(SUDO_ID,msg.chat_id_,msg.id_)
 end
@@ -2998,16 +2998,16 @@ end
 end
 
 --====================== Reply Only Group =====================================
-if msg.Admin and redis:get(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_) and redis:get(kenwa..'replay1'..msg.chat_id_..msg.sender_user_id_) then
-local klma = redis:get(kenwa..'replay1'..msg.chat_id_..msg.sender_user_id_)
-if msg.content_ and msg.content_.caption_ then redis:hset(kenwa..':caption_replay:'..msg.chat_id_,klma,msg.content_.caption_) end
+if msg.Admin and redis:get(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_) and redis:get(A7KAN..'replay1'..msg.chat_id_..msg.sender_user_id_) then
+local klma = redis:get(A7KAN..'replay1'..msg.chat_id_..msg.sender_user_id_)
+if msg.content_ and msg.content_.caption_ then redis:hset(A7KAN..':caption_replay:'..msg.chat_id_,klma,msg.content_.caption_) end
 if msg.text then 
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 if utf8.len(msg.text) > 550 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ عذرا غير مسموح باضافه جواب الرد باكثر من 550 حرف تم الغاء الامر\n❕")
 return false
 end
-redis:hset(kenwa..'replay:'..msg.chat_id_,klma,Flter_Markdown(msg.text))
+redis:hset(A7KAN..'replay:'..msg.chat_id_,klma,Flter_Markdown(msg.text))
 sendMsg(msg.chat_id_,msg.id_,'(['..klma..'])\n  ✓ تم اضافت الرد 🚀 \n-')
 return false
 elseif msg.content_.ID == "MessagePhoto" then
@@ -3016,44 +3016,44 @@ photo_id = msg.content_.photo_.sizes_[3].photo_.persistent_id_
 else 
 photo_id = msg.content_.photo_.sizes_[0].photo_.persistent_id_
 end
-redis:hset(kenwa..'replay_photo:group:'..msg.chat_id_,klma,photo_id)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_photo:group:'..msg.chat_id_,klma,photo_id)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه صوره للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوره الاتيه .')
 elseif msg.content_.ID == "MessageVoice" then
-redis:hset(kenwa..'replay_voice:group:'..msg.chat_id_,klma,msg.content_.voice_.voice_.persistent_id_)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_voice:group:'..msg.chat_id_,klma,msg.content_.voice_.voice_.persistent_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه بصمه صوت للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لسماع البصمه الاتيه .')
 elseif msg.content_.ID == "MessageAnimation" then
-redis:hset(kenwa..'replay_animation:group:'..msg.chat_id_,klma,msg.content_.animation_.animation_.persistent_id_)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_animation:group:'..msg.chat_id_,klma,msg.content_.animation_.animation_.persistent_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه متحركه للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوره الاتيه .')
 elseif msg.content_.ID == "MessageVideo" then
-redis:hset(kenwa..'replay_video:group:'..msg.chat_id_,klma,msg.content_.video_.video_.persistent_id_)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_video:group:'..msg.chat_id_,klma,msg.content_.video_.video_.persistent_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه فيديو للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الفيديو الاتي .')
 elseif msg.content_.ID == "MessageAudio" then
-redis:hset(kenwa..'replay_audio:group:'..msg.chat_id_,klma,msg.content_.audio_.audio_.persistent_id_)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_audio:group:'..msg.chat_id_,klma,msg.content_.audio_.audio_.persistent_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه للصوت للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوت الاتي .')
 elseif msg.content_.ID == "MessageSticker" then
-redis:hset(kenwa..'replay_sticker:group:'..msg.chat_id_,klma,msg.content_.sticker_.sticker_.persistent_id_)
-redis:del(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_sticker:group:'..msg.chat_id_,klma,msg.content_.sticker_.sticker_.persistent_id_)
+redis:del(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه ملصق للرد بنجاح ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الملصق الاتي .')
 end  
 
 end
 
 --====================== Reply All Groups =====================================
-if msg.SudoUser and redis:get(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_) and redis:get(kenwa..'allreplay:'..msg.chat_id_..msg.sender_user_id_) then
-local klma = redis:get(kenwa..'allreplay:'..msg.chat_id_..msg.sender_user_id_)
-if msg.content_.caption_ then redis:hset(kenwa..':caption_replay_All:',klma,msg.content_.caption_) end
+if msg.SudoUser and redis:get(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_) and redis:get(A7KAN..'allreplay:'..msg.chat_id_..msg.sender_user_id_) then
+local klma = redis:get(A7KAN..'allreplay:'..msg.chat_id_..msg.sender_user_id_)
+if msg.content_.caption_ then redis:hset(A7KAN..':caption_replay_All:',klma,msg.content_.caption_) end
 if msg.text then
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 if utf8.len(msg.text) > 550 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ عذرا غير مسموح باضافه جواب الرد باكثر من 550 حرف تم الغاء الامر\n❕")
 return false
 end
-redis:hset(kenwa..'replay:all',klma,Flter_Markdown(msg.text))
+redis:hset(A7KAN..'replay:all',klma,Flter_Markdown(msg.text))
 return sendMsg(msg.chat_id_,msg.id_,'(['..klma..'])\n  ✓ تم اضافت الرد لكل المجموعات 🚀 ')
 elseif msg.content_.ID == "MessagePhoto" then 
 if msg.content_.photo_.sizes_[3] then 
@@ -3061,28 +3061,28 @@ photo_id = msg.content_.photo_.sizes_[3].photo_.persistent_id_
 else 
 photo_id = msg.content_.photo_.sizes_[0].photo_.persistent_id_
 end
-redis:hset(kenwa..'replay_photo:group:',klma,photo_id)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_photo:group:',klma,photo_id)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه صوره للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوره الاتيه .')
 elseif msg.content_.ID == "MessageVoice" then
-redis:hset(kenwa..'replay_voice:group:',klma,msg.content_.voice_.voice_.persistent_id_)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_voice:group:',klma,msg.content_.voice_.voice_.persistent_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه بصمه صوت للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لسماع البصمه الاتيه .')
 elseif msg.content_.ID == "MessageAnimation" then
-redis:hset(kenwa..'replay_animation:group:',klma,msg.content_.animation_.animation_.persistent_id_)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_animation:group:',klma,msg.content_.animation_.animation_.persistent_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه متحركه للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوره الاتيه .')
 elseif msg.content_.ID == "MessageVideo" then
-redis:hset(kenwa..'replay_video:group:',klma,msg.content_.video_.video_.persistent_id_)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_video:group:',klma,msg.content_.video_.video_.persistent_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه فيديو للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الفيديو الاتي .')
 elseif msg.content_.ID == "MessageAudio" then
-redis:hset(kenwa..'replay_audio:group:',klma,msg.content_.audio_.audio_.persistent_id_)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_audio:group:',klma,msg.content_.audio_.audio_.persistent_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه للصوت للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الصوت الاتي .')
 elseif msg.content_.ID == "MessageSticker" then
-redis:hset(kenwa..'replay_sticker:group:',klma,msg.content_.sticker_.sticker_.persistent_id_)
-redis:del(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
+redis:hset(A7KAN..'replay_sticker:group:',klma,msg.content_.sticker_.sticker_.persistent_id_)
+redis:del(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_)
 return sendMsg(msg.chat_id_,msg.id_,'🗂¦ تم اضافه ملصق للرد العام ✓\n🗂¦ يمكنك ارسال (['..klma..']) لاضهار الملصق الاتي .')
 end  
 
@@ -3091,9 +3091,9 @@ end
 if msg.text then
 --====================== Requst UserName Of Channel For ForceSub ==============
 
-if msg.SudoBase and redis:get(kenwa..":ForceSub:"..msg.sender_user_id_) then
+if msg.SudoBase and redis:get(A7KAN..":ForceSub:"..msg.sender_user_id_) then
 if msg.text:match("^@[%a%d_]+$") then
-redis:del(kenwa..":ForceSub:"..msg.sender_user_id_)
+redis:del(A7KAN..":ForceSub:"..msg.sender_user_id_)
 local url , res = https.request(ApiToken..'/getchatmember?chat_id='..msg.text..'&user_id='..msg.sender_user_id_)
 if res == 400 then
 local Req = JSON.decode(url)
@@ -3103,7 +3103,7 @@ elseif Req.description == "Bad Request: CHAT_ADMIN_REQUIRED" then
 sendMsg(msg.chat_id_,msg.id_,"📑| عذرا , لقد نسيت شيئا \n🔖| يجب رفع البوت مشرف في قناتك لتتمكن من تفعيل الاشتراك الاجباري .")
 end
 else
-redis:set(kenwa..":UserNameChaneel",msg.text)
+redis:set(A7KAN..":UserNameChaneel",msg.text)
 sendMsg(msg.chat_id_,msg.id_,"🔖| جـيـد , الان لقد تم تفعيل الاشتراك الاجباري\n📮| على قناتك : ["..msg.text.."]")
 end
 else
@@ -3112,108 +3112,108 @@ end
 return false
 end
 
-if msg.SudoBase and redis:get(kenwa..'namebot:witting'..msg.sender_user_id_) then --- استقبال اسم البوت 
+if msg.SudoBase and redis:get(A7KAN..'namebot:witting'..msg.sender_user_id_) then --- استقبال اسم البوت 
 if utf8.len(msg.text) >= 50 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك وضع اسم باكثر من 50 حرف\n❕")
 else
-redis:del(kenwa..'namebot:witting'..msg.sender_user_id_)
-redis:set(kenwa..':NameBot:',msg.text)
+redis:del(A7KAN..'namebot:witting'..msg.sender_user_id_)
+redis:set(A7KAN..':NameBot:',msg.text)
 Start_Bot() 
 sendMsg(msg.chat_id_,msg.id_,"📭¦ تم تغير اسم البوت  ✋🏿\n🗯¦ الان اسمه "..Flter_Markdown(msg.text).." \n✓")
 end
 return false
 end
 
-if msg.SudoBase and redis:get(kenwa..'addrd_all:'..msg.chat_id_..msg.sender_user_id_) and not redis:get(kenwa..'allreplay:'..msg.chat_id_..msg.sender_user_id_) then -- استقبال الرد لكل المجموعات
+if msg.SudoBase and redis:get(A7KAN..'addrd_all:'..msg.chat_id_..msg.sender_user_id_) and not redis:get(A7KAN..'allreplay:'..msg.chat_id_..msg.sender_user_id_) then -- استقبال الرد لكل المجموعات
 if utf8.len(msg.text) > 25 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ عذرا غير مسموح باضافه كلمه الرد باكثر من 25 حرف \n❕")
 else
-redis:hdel(kenwa..'replay_photo:group:',msg.text)
-redis:hdel(kenwa..'replay_voice:group:',msg.text)
-redis:hdel(kenwa..'replay_animation:group:',msg.text)
-redis:hdel(kenwa..'replay_audio:group:',msg.text)
-redis:hdel(kenwa..'replay_sticker:group:',msg.text)
-redis:hdel(kenwa..'replay_video:group:',msg.text)
-redis:setex(kenwa..'allreplay:'..msg.chat_id_..msg.sender_user_id_,300,msg.text)
+redis:hdel(A7KAN..'replay_photo:group:',msg.text)
+redis:hdel(A7KAN..'replay_voice:group:',msg.text)
+redis:hdel(A7KAN..'replay_animation:group:',msg.text)
+redis:hdel(A7KAN..'replay_audio:group:',msg.text)
+redis:hdel(A7KAN..'replay_sticker:group:',msg.text)
+redis:hdel(A7KAN..'replay_video:group:',msg.text)
+redis:setex(A7KAN..'allreplay:'..msg.chat_id_..msg.sender_user_id_,300,msg.text)
 sendMsg(msg.chat_id_,msg.id_,"📜¦ جيد , يمكنك الان ارسال جوا ب الردالعام \n🔛¦ [[ نص,صوره,فيديو,متحركه,بصمه,اغنيه ]] ✓\n-")
 end
 return false
 end
 
-if msg.SudoUser and redis:get(kenwa..'delrdall:'..msg.sender_user_id_) then
-redis:del(kenwa..'delrdall:'..msg.sender_user_id_)
-local names = redis:hget(kenwa..'replay:all',msg.text)
-local photo =redis:hget(kenwa..'replay_photo:group:',msg.text)
-local voice = redis:hget(kenwa..'replay_voice:group:',msg.text)
-local animation = redis:hget(kenwa..'replay_animation:group:',msg.text)
-local audio = redis:hget(kenwa..'replay_audio:group:',msg.text)
-local sticker = redis:hget(kenwa..'replay_sticker:group:',msg.text)
-local video = redis:hget(kenwa..'replay_video:group:',msg.text)
+if msg.SudoUser and redis:get(A7KAN..'delrdall:'..msg.sender_user_id_) then
+redis:del(A7KAN..'delrdall:'..msg.sender_user_id_)
+local names = redis:hget(A7KAN..'replay:all',msg.text)
+local photo =redis:hget(A7KAN..'replay_photo:group:',msg.text)
+local voice = redis:hget(A7KAN..'replay_voice:group:',msg.text)
+local animation = redis:hget(A7KAN..'replay_animation:group:',msg.text)
+local audio = redis:hget(A7KAN..'replay_audio:group:',msg.text)
+local sticker = redis:hget(A7KAN..'replay_sticker:group:',msg.text)
+local video = redis:hget(A7KAN..'replay_video:group:',msg.text)
 if not (names or photo or voice or animation or audio or sticker or video) then
 sendMsg(msg.chat_id_,msg.id_,'💬*¦* هذا الرد ليس مضاف في قائمه الردود 📛')
 else
-redis:hdel(kenwa..'replay:all',msg.text)
-redis:hdel(kenwa..'replay_photo:group:',msg.text)
-redis:hdel(kenwa..'replay_voice:group:',msg.text)
-redis:hdel(kenwa..'replay_audio:group:',msg.text)
-redis:hdel(kenwa..'replay_animation:group:',msg.text)
-redis:hdel(kenwa..'replay_sticker:group:',msg.text)
-redis:hdel(kenwa..'replay_video:group:',msg.text)
-redis:hdel(kenwa..':caption_replay_All:',msg.text)
+redis:hdel(A7KAN..'replay:all',msg.text)
+redis:hdel(A7KAN..'replay_photo:group:',msg.text)
+redis:hdel(A7KAN..'replay_voice:group:',msg.text)
+redis:hdel(A7KAN..'replay_audio:group:',msg.text)
+redis:hdel(A7KAN..'replay_animation:group:',msg.text)
+redis:hdel(A7KAN..'replay_sticker:group:',msg.text)
+redis:hdel(A7KAN..'replay_video:group:',msg.text)
+redis:hdel(A7KAN..':caption_replay_All:',msg.text)
 sendMsg(msg.chat_id_,msg.id_,'('..Flter_Markdown(msg.text)..')\n  ✓ تم مسح الرد 🚀 ')
 end
 return false
 end 
 
 
-if msg.SudoBase and redis:get(kenwa..'text_sudo:witting'..msg.sender_user_id_) then -- استقبال كليشه المطور
+if msg.SudoBase and redis:get(A7KAN..'text_sudo:witting'..msg.sender_user_id_) then -- استقبال كليشه المطور
 if utf8.len(msg.text) > 2500 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك وضع كليشه باكثر من 2500 حرف\n❕")
 else
-redis:del(kenwa..'text_sudo:witting'..msg.sender_user_id_) 
-redis:set(kenwa..':TEXT_SUDO',Flter_Markdown(msg.text))
+redis:del(A7KAN..'text_sudo:witting'..msg.sender_user_id_) 
+redis:set(A7KAN..':TEXT_SUDO',Flter_Markdown(msg.text))
 sendMsg(msg.chat_id_,msg.id_, "📜*¦* تم وضع الكليشه بنجاح كلاتي 👋🏻\n\n*{*  "..Flter_Markdown(msg.text).."  *}*\n✓")
 end
 return false
 end
 
-if msg.Admin and redis:get(kenwa..'welcom:witting'..msg.sender_user_id_) then -- استقبال كليشه الترحيب
+if msg.Admin and redis:get(A7KAN..'welcom:witting'..msg.sender_user_id_) then -- استقبال كليشه الترحيب
 if utf8.len(msg.text) > 2500 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك وضع كليشه باكثر من 2500 حرف\n❕")
 else
-redis:del(kenwa..'welcom:witting'..msg.sender_user_id_) 
-redis:set(kenwa..'welcome:msg'..msg.chat_id_,msg.text)
+redis:del(A7KAN..'welcom:witting'..msg.sender_user_id_) 
+redis:set(A7KAN..'welcome:msg'..msg.chat_id_,msg.text)
 sendMsg(msg.chat_id_,msg.id_,"📜*¦* تم وضع الترحيب بنجاح  👋\n✓" )
 end
 return false
 end
 
-if msg.Admin and redis:get(kenwa..'rulse:witting'..msg.sender_user_id_) then --- استقبال القوانين
+if msg.Admin and redis:get(A7KAN..'rulse:witting'..msg.sender_user_id_) then --- استقبال القوانين
 if utf8.len(msg.text) > 2500 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك وضع قوانين باكثر من 2500 حرف\n❕")
 else
-redis:del(kenwa..'rulse:witting'..msg.sender_user_id_) 
-redis:set(kenwa..'rulse:msg'..msg.chat_id_,Flter_Markdown(msg.text)) 
+redis:del(A7KAN..'rulse:witting'..msg.sender_user_id_) 
+redis:set(A7KAN..'rulse:msg'..msg.chat_id_,Flter_Markdown(msg.text)) 
 sendMsg(msg.chat_id_,msg.id_,'📜*¦* مرحبآ عزيزي\n📦¦ تم حفظ القوانين بنجاح ✓\n🔖¦ ارسل [[ القوانين ]] لعرضها \n💬✓')
 end
 return false
 end
 
-if msg.Admin and redis:get(kenwa..'name:witting'..msg.sender_user_id_) then --- استقبال الاسم
+if msg.Admin and redis:get(A7KAN..'name:witting'..msg.sender_user_id_) then --- استقبال الاسم
 if utf8.len(msg.text) > 550 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك اسم المجموعه باكثر من 550 حرف \n❕")
 else
-redis:del(kenwa..'name:witting'..msg.sender_user_id_) 
+redis:del(A7KAN..'name:witting'..msg.sender_user_id_) 
 tdcli_function({ID="ChangeChatTitle",chat_id_=msg.chat_id_,title_=msg.text},dl_cb,nil)
 end
 return false
 end
 
-if msg.Admin and redis:get(kenwa..'about:witting'..msg.sender_user_id_) then --- استقبال الوصف
+if msg.Admin and redis:get(A7KAN..'about:witting'..msg.sender_user_id_) then --- استقبال الوصف
 if utf8.len(msg.text) > 1000 then 
 sendMsg(msg.chat_id_,msg.id_,"📛¦ لا يمكنك وضع وصف باكثر من 1000 حرف \n❕")
 else
-redis:del(kenwa..'about:witting'..msg.sender_user_id_) 
+redis:del(A7KAN..'about:witting'..msg.sender_user_id_) 
 tdcli_function({ID="ChangeChannelAbout",channel_id_=msg.chat_id_:gsub('-100',''),about_ = msg.text},function(arg,data) 
 if data.ID == "Ok" then 
 sendMsg(arg.chat_id_,arg.id_,"📜*¦* تم وضع الوصف بنجاح\n✓")
@@ -3224,10 +3224,10 @@ return false
 end
 
 
-if msg.SudoUser and redis:get(kenwa..'fwd:all'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه عام
-redis:del(kenwa..'fwd:all'..msg.sender_user_id_)
-local pv = redis:smembers(kenwa..'users')  
-local groups = redis:smembers(kenwa..'group:ids')
+if msg.SudoUser and redis:get(A7KAN..'fwd:all'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه عام
+redis:del(A7KAN..'fwd:all'..msg.sender_user_id_)
+local pv = redis:smembers(A7KAN..'users')  
+local groups = redis:smembers(A7KAN..'group:ids')
 local allgp =  #pv + #groups
 if allgp >= 300 then
 sendMsg(msg.chat_id_,msg.id_,'📑| اهلا عزيزي المطور \n🔖| جاري نشر التوجيه للمجموعات وللمشتركين ...')			
@@ -3244,9 +3244,9 @@ sendMsg(arg.chat_id_,arg.id_,'📑*¦* تم الاذاعه بنجاح ✓')
 return false
 end
 
-if msg.SudoUser and redis:get(kenwa..'fwd:pv'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه خاص
-redis:del(kenwa..'fwd:pv'..msg.sender_user_id_)
-local pv = redis:smembers(kenwa..'users')
+if msg.SudoUser and redis:get(A7KAN..'fwd:pv'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه خاص
+redis:del(A7KAN..'fwd:pv'..msg.sender_user_id_)
+local pv = redis:smembers(A7KAN..'users')
 if #pv >= 300 then
 sendMsg(msg.chat_id_,msg.id_,'📑| اهلا عزيزي المطور \n🔖| جاري نشر الرساله للمشتركين ...')			
 end
@@ -3261,9 +3261,9 @@ end,{chat_id_=msg.chat_id_,id_=msg.id_,pv=pv[i],countpv=#pv[i]})
 end
 end
 
-if msg.SudoUser and redis:get(kenwa..'fwd:groups'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه خاص
-redis:del(kenwa..'fwd:groups'..msg.sender_user_id_)
-local groups = redis:smembers(kenwa..'group:ids')
+if msg.SudoUser and redis:get(A7KAN..'fwd:groups'..msg.sender_user_id_) then ---- استقبال رساله الاذاعه خاص
+redis:del(A7KAN..'fwd:groups'..msg.sender_user_id_)
+local groups = redis:smembers(A7KAN..'group:ids')
 if #groups >= 300 then
 sendMsg(msg.chat_id_,msg.id_,'📑| اهلا عزيزي المطور \n🔖| جاري نشر الرساله للمجموعات ...')			
 end
@@ -3281,10 +3281,10 @@ return false
 end 
 end 
 
-if msg.SudoUser and msg.forward_info_ and redis:get(kenwa..'fwd:'..msg.sender_user_id_) then
-redis:del(kenwa..'fwd:'..msg.sender_user_id_)
-local pv = redis:smembers(kenwa..'users')
-local groups = redis:smembers(kenwa..'group:ids')
+if msg.SudoUser and msg.forward_info_ and redis:get(A7KAN..'fwd:'..msg.sender_user_id_) then
+redis:del(A7KAN..'fwd:'..msg.sender_user_id_)
+local pv = redis:smembers(A7KAN..'users')
+local groups = redis:smembers(A7KAN..'group:ids')
 local allgp =  #pv + #groups
 if allgp == 500 then
 sendMsg(msg.chat_id_,msg.id_,'📑| اهلا عزيزي المطور \n🔖| جاري نشر التوجيه للمجموعات وللمشتركين ...')			
@@ -3311,14 +3311,14 @@ return false
 end
 end
 
-if msg.SudoBase and  msg.content_.ID == "MessagePhoto" and redis:get(kenwa..'welcom_ph:witting'..msg.sender_user_id_) then
-redis:del(kenwa..'welcom_ph:witting'..msg.sender_user_id_)
+if msg.SudoBase and  msg.content_.ID == "MessagePhoto" and redis:get(A7KAN..'welcom_ph:witting'..msg.sender_user_id_) then
+redis:del(A7KAN..'welcom_ph:witting'..msg.sender_user_id_)
 if msg.content_.photo_.sizes_[3] then 
 photo_id = msg.content_.photo_.sizes_[3].photo_.persistent_id_
 else 
 photo_id = msg.content_.photo_.sizes_[0].photo_.persistent_id_
 end
-redis:set(kenwa..':WELCOME_BOT',photo_id)
+redis:set(A7KAN..':WELCOME_BOT',photo_id)
 sendMsg(msg.chat_id_,msg.id_,'🚸 ¦ تم تغيير صـورهہ‏‏ آلترحيب للبوت 🌿\n✓')
 return false
 end 
@@ -3327,8 +3327,8 @@ end
 
 if msg.type ~= "channel" or not msg.GroupActive then return false end
 
-if msg.Admin and msg.content_.ID == "MessagePhoto" and redis:get(kenwa..'photo:group'..msg.chat_id_..msg.sender_user_id_)then
-redis:del(kenwa..'photo:group'..msg.chat_id_..msg.sender_user_id_)
+if msg.Admin and msg.content_.ID == "MessagePhoto" and redis:get(A7KAN..'photo:group'..msg.chat_id_..msg.sender_user_id_)then
+redis:del(A7KAN..'photo:group'..msg.chat_id_..msg.sender_user_id_)
 if msg.content_.photo_.sizes_[3] then 
 photo_id = msg.content_.photo_.sizes_[3].photo_.persistent_id_
 else 
@@ -3345,7 +3345,7 @@ end
 
 if msg.text and msg.Admin then
 
-if redis:get(kenwa..'addrd:'..msg.chat_id_..msg.sender_user_id_) and not redis:get(kenwa..'replay1'..msg.chat_id_..msg.sender_user_id_) then 
+if redis:get(A7KAN..'addrd:'..msg.chat_id_..msg.sender_user_id_) and not redis:get(A7KAN..'replay1'..msg.chat_id_..msg.sender_user_id_) then 
 
 -- استقبال الرد للمجموعه فقط
 
@@ -3353,38 +3353,38 @@ if utf8.len(msg.text) > 25 then
 sendMsg(msg.chat_id_,msg.id_,"📛¦ عذرا غير مسموح باضافه كلمه الرد باكثر من 25 حرف \n❕")
 return false
 end
-redis:hdel(kenwa..'replay:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_photo:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_voice:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_animation:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_audio:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_sticker:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_video:group:'..msg.chat_id_,msg.text)
-redis:setex(kenwa..'replay1'..msg.chat_id_..msg.sender_user_id_,300,msg.text)
+redis:hdel(A7KAN..'replay:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_photo:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_voice:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_animation:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_audio:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_sticker:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_video:group:'..msg.chat_id_,msg.text)
+redis:setex(A7KAN..'replay1'..msg.chat_id_..msg.sender_user_id_,300,msg.text)
 sendMsg(msg.chat_id_,msg.id_,"📜¦ جيد , يمكنك الان ارسال جواب الرد \n🔛¦ {نص,صوره,فيديو,متحركه,بصمه,اغنيه } ✓")
 return false
 end
 
-if redis:get(kenwa..'delrd:'..msg.sender_user_id_) then  -- Del Replay For Group
-redis:del(kenwa..'delrd:'..msg.sender_user_id_)
-local names 	= redis:hget(kenwa..'replay:'..msg.chat_id_,msg.text)
-local photo 	= redis:hget(kenwa..'replay_photo:group:'..msg.chat_id_,msg.text)
-local voice 	= redis:hget(kenwa..'replay_voice:group:'..msg.chat_id_,msg.text)
-local animation = redis:hget(kenwa..'replay_animation:group:'..msg.chat_id_,msg.text)
-local audio 	= redis:hget(kenwa..'replay_audio:group:'..msg.chat_id_,msg.text)
-local sticker 	= redis:hget(kenwa..'replay_sticker:group:'..msg.chat_id_,msg.text)
-local video 	= redis:hget(kenwa..'replay_video:group:'..msg.chat_id_,msg.text)
+if redis:get(A7KAN..'delrd:'..msg.sender_user_id_) then  -- Del Replay For Group
+redis:del(A7KAN..'delrd:'..msg.sender_user_id_)
+local names 	= redis:hget(A7KAN..'replay:'..msg.chat_id_,msg.text)
+local photo 	= redis:hget(A7KAN..'replay_photo:group:'..msg.chat_id_,msg.text)
+local voice 	= redis:hget(A7KAN..'replay_voice:group:'..msg.chat_id_,msg.text)
+local animation = redis:hget(A7KAN..'replay_animation:group:'..msg.chat_id_,msg.text)
+local audio 	= redis:hget(A7KAN..'replay_audio:group:'..msg.chat_id_,msg.text)
+local sticker 	= redis:hget(A7KAN..'replay_sticker:group:'..msg.chat_id_,msg.text)
+local video 	= redis:hget(A7KAN..'replay_video:group:'..msg.chat_id_,msg.text)
 if not (names or photo or voice or animation or audio or sticker or video) then
 sendMsg(msg.chat_id_,msg.id_,'💬*¦* هذا الرد ليس مضاف في قائمه الردود 📛')
 else
-redis:hdel(kenwa..'replay:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_photo:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_voice:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_audio:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_animation:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_sticker:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..'replay_video:group:'..msg.chat_id_,msg.text)
-redis:hdel(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_photo:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_voice:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_audio:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_animation:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_sticker:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..'replay_video:group:'..msg.chat_id_,msg.text)
+redis:hdel(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendMsg(msg.chat_id_,msg.id_,'(['..msg.text..'])\n  ✓ تم مسح الرد 🚀 ')
 end 
 return false
@@ -3394,8 +3394,8 @@ end
 
 if msg.content_.ID == "MessagePinMessage" then
 print(" -- pinned -- ")
-local msg_pin_id = redis:get(kenwa..":MsgIDPin:"..msg.chat_id_)
-if not msg.Director and redis:get(kenwa..'lock_pin'..msg.chat_id_) then
+local msg_pin_id = redis:get(A7KAN..":MsgIDPin:"..msg.chat_id_)
+if not msg.Director and redis:get(A7KAN..'lock_pin'..msg.chat_id_) then
 if msg_pin_id then
 print(" -- pinChannelMessage -- ")
 tdcli_function({ID ="PinChannelMessage",
@@ -3417,7 +3417,7 @@ end,{chat_id_=msg.chat_id_,id_=msg.id_})
 end
 return false
 end
-redis:set(kenwa..":MsgIDPin:"..msg.chat_id_,msg.id_)
+redis:set(A7KAN..":MsgIDPin:"..msg.chat_id_,msg.id_)
 end
 
 if msg.content_.ID == "MessageChatChangePhoto" then
@@ -3429,37 +3429,37 @@ end
 
 if msg.content_.ID == "MessageChatChangeTitle" then
 GetUserID(msg.sender_user_id_,function(arg,data)
-redis:set(kenwa..'group:name'..arg.chat_id_,arg.title_)
+redis:set(A7KAN..'group:name'..arg.chat_id_,arg.title_)
 if data.username_ then UserName = "@"..data.username_ else UserName = "احد المشرفين" end
 sendMsg(arg.chat_id_,arg.id_,"📡| قام  ["..UserName.."]\n📭¦ بتغير اسم المجموعه  ✋🏿\n🗯¦ الى "..Flter_Markdown(msg.content_.title_).." \n✓") 
 end,{chat_id_=msg.chat_id_,id_=msg.id_,title_=msg.content_.title_})
 end
 
-if msg.content_.ID == "MessageChatAddMembers" and redis:get(kenwa..'welcome:get'..msg.chat_id_) then
-local adduserx = tonumber(redis:get(kenwa..'user:'..msg.sender_user_id_..':msgs') or 0)
+if msg.content_.ID == "MessageChatAddMembers" and redis:get(A7KAN..'welcome:get'..msg.chat_id_) then
+local adduserx = tonumber(redis:get(A7KAN..'user:'..msg.sender_user_id_..':msgs') or 0)
 if adduserx > 3 then 
-redis:del(kenwa..'welcome:get'..msg.chat_id_)
+redis:del(A7KAN..'welcome:get'..msg.chat_id_)
 end
-redis:setex(kenwa..'user:'..msg.sender_user_id_..':msgs',3,adduserx+1)
+redis:setex(A7KAN..'user:'..msg.sender_user_id_..':msgs',3,adduserx+1)
 end
 
 if (msg.content_.ID == "MessageChatAddMembers" or msg.content_.ID == "MessageChatJoinByLink") then
-if redis:get(kenwa..'welcome:get'..msg.chat_id_) then
+if redis:get(A7KAN..'welcome:get'..msg.chat_id_) then
 if msg.adduserType then
-welcome = (redis:get(kenwa..'welcome:msg'..msg.chat_id_) or "🔖¦ مرحباً عزيزي\n🔖¦ نورت المجموعة \n💂🏼‍♀️")
-welcome = welcome:gsub("{القوانين}", redis:get(kenwa..'rulse:msg'..msg.chat_id_) or "🔖¦ مرحبأ عزيري 👋🏻 القوانين كلاتي 👇🏻\n🔖¦ ممنوع نشر الروابط \n🔖¦ ممنوع التكلم او نشر صور اباحيه \n🔖¦ ممنوع  اعاده توجيه \n🔖¦ ممنوع التكلم بلطائفه \n🔖¦ الرجاء احترام المدراء والادمنيه 😅\n")
+welcome = (redis:get(A7KAN..'welcome:msg'..msg.chat_id_) or "🔖¦ مرحباً عزيزي\n🔖¦ نورت المجموعة \n💂🏼‍♀️")
+welcome = welcome:gsub("{القوانين}", redis:get(A7KAN..'rulse:msg'..msg.chat_id_) or "🔖¦ مرحبأ عزيري 👋🏻 القوانين كلاتي 👇🏻\n🔖¦ ممنوع نشر الروابط \n🔖¦ ممنوع التكلم او نشر صور اباحيه \n🔖¦ ممنوع  اعاده توجيه \n🔖¦ ممنوع التكلم بلطائفه \n🔖¦ الرجاء احترام المدراء والادمنيه 😅\n")
 if msg.addusername then UserName = '@'..msg.addusername else UserName = '< لا يوجد معرف >' end
-welcome = welcome:gsub("{المجموعه}",Flter_Markdown((redis:get(kenwa..'group:name'..msg.chat_id_) or '')))
+welcome = welcome:gsub("{المجموعه}",Flter_Markdown((redis:get(A7KAN..'group:name'..msg.chat_id_) or '')))
 local welcome = welcome:gsub("{المعرف}",UserName)
 local welcome = welcome:gsub("{الاسم}",FlterName(msg.addname,20))
 sendMsg(msg.chat_id_,msg.id_,Flter_Markdown(welcome))
 return false
 else
 GetUserID(msg.sender_user_id_,function(arg,data)
-welcome = (redis:get(kenwa..'welcome:msg'..arg.chat_id_) or "🔖¦ مرحباً عزيزي\n🔖¦ نورت المجموعة \n💂🏼‍♀️")
-welcome = welcome:gsub("{القوانين}", redis:get(kenwa..'rulse:msg'..arg.chat_id_) or "🔖¦ مرحبأ عزيري 👋🏻 القوانين كلاتي 👇🏻\n🔖¦ ممنوع نشر الروابط \n🔖¦ ممنوع التكلم او نشر صور اباحيه \n🔖¦ ممنوع  اعاده توجيه \n🔖¦ ممنوع التكلم بلطائفه \n🔖¦ الرجاء احترام المدراء والادمنيه 😅\n")
+welcome = (redis:get(A7KAN..'welcome:msg'..arg.chat_id_) or "🔖¦ مرحباً عزيزي\n🔖¦ نورت المجموعة \n💂🏼‍♀️")
+welcome = welcome:gsub("{القوانين}", redis:get(A7KAN..'rulse:msg'..arg.chat_id_) or "🔖¦ مرحبأ عزيري 👋🏻 القوانين كلاتي 👇🏻\n🔖¦ ممنوع نشر الروابط \n🔖¦ ممنوع التكلم او نشر صور اباحيه \n🔖¦ ممنوع  اعاده توجيه \n🔖¦ ممنوع التكلم بلطائفه \n🔖¦ الرجاء احترام المدراء والادمنيه 😅\n")
 if data.username_ then UserName = '@'..data.username_ else UserName = '< لا يوجد معرف >' end
-welcome = welcome:gsub("{المجموعه}",Flter_Markdown((redis:get(kenwa..'group:name'..arg.chat_id_) or '')))
+welcome = welcome:gsub("{المجموعه}",Flter_Markdown((redis:get(A7KAN..'group:name'..arg.chat_id_) or '')))
 local welcome = welcome:gsub("{المعرف}",UserName)
 local welcome = welcome:gsub("{الاسم}",FlterName(data,20))
 sendMsg(arg.chat_id_,arg.id_,Flter_Markdown(welcome)) 
@@ -3471,11 +3471,11 @@ end
 
 if not msg.Admin and not msg.Special then -- للاعضاء فقط   
 
-if not msg.forward_info_ and msg.content_.ID ~= "MessagePhoto" and redis:get(kenwa..'lock_flood'..msg.chat_id_)  then
-local msgs = (redis:get(kenwa..'user:'..msg.sender_user_id_..':msgs') or 0)
-local NUM_MSG_MAX = (redis:get(kenwa..'num_msg_max'..msg.chat_id_) or 5)
+if not msg.forward_info_ and msg.content_.ID ~= "MessagePhoto" and redis:get(A7KAN..'lock_flood'..msg.chat_id_)  then
+local msgs = (redis:get(A7KAN..'user:'..msg.sender_user_id_..':msgs') or 0)
+local NUM_MSG_MAX = (redis:get(A7KAN..'num_msg_max'..msg.chat_id_) or 5)
 if tonumber(msgs) > tonumber(NUM_MSG_MAX) then 
-redis:setex(kenwa..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood',30,true)
+redis:setex(A7KAN..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood',30,true)
 GetUserID(msg.sender_user_id_,function(arg,data)
 Restrict(arg.chat_id_,arg.sender_user_id_,1)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
@@ -3483,28 +3483,28 @@ SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_,NUM_MSG_MAX=NUM_MSG_MAX})
 return false
 end 
-redis:setex(kenwa..'user:'..msg.sender_user_id_..':msgs',2,msgs+1)
+redis:setex(A7KAN..'user:'..msg.sender_user_id_..':msgs',2,msgs+1)
 end
  
  
 if msg.forward_info_ then
-if redis:get(kenwa..'mute_forward'..msg.chat_id_) then -- قفل التوجيه
+if redis:get(A7KAN..'mute_forward'..msg.chat_id_) then -- قفل التوجيه
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del Becuse Send Fwd \27[0m")
 if data.ID == "Error" and data.code_ == 6 then 
 sendMsg(msg.chat_id_,msg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 return false
 end
-if redis:get(kenwa..'lock_woring'..msg.chat_id_) and not redis:get(kenwa..':User_Fwd_Msg:'..msg.sender_user_id_..':flood') then
+if redis:get(A7KAN..'lock_woring'..msg.chat_id_) and not redis:get(A7KAN..':User_Fwd_Msg:'..msg.sender_user_id_..':flood') then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,data.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع اعادة التوجيه  \n📛",12,utf8.len(USERNAME)) 
-redis:setex(kenwa..':User_Fwd_Msg:'..arg.sender_user_id_..':flood',15,true)
+redis:setex(A7KAN..':User_Fwd_Msg:'..arg.sender_user_id_..':flood',15,true)
 end,{chat_id_=arg.chat_id_,id_=arg.id_,sender_user_id_=arg.sender_user_id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif redis:get(kenwa..':tqeed_fwd:'..msg.chat_id_) then
+elseif redis:get(A7KAN..':tqeed_fwd:'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del Becuse Send Fwd tqeed \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
@@ -3514,13 +3514,13 @@ Restrict(arg.chat_id_,arg.sender_user_id_,1)
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false 
 end
-elseif msg.edited and msg.content_.ID ~= "MessageText" and redis:get(kenwa..'lock_edit'..msg.chat_id_) then -- قفل التعديل
+elseif msg.edited and msg.content_.ID ~= "MessageText" and redis:get(A7KAN..'lock_edit'..msg.chat_id_) then -- قفل التعديل
 Del_msg(msg.chat_id_,msg.id_,function(arg,data) 
 print("\27[1;31m Msg Del becuse send Edit \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(msg.chat_id_,msg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..msg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..msg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذراً ممنوع التعديل تم المسح \n📛",12,utf8.len(USERNAME)) 
@@ -3528,13 +3528,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif tonumber(msg.via_bot_user_id_) ~= 0 and redis:get(kenwa..'mute_inline'..msg.chat_id_) then -- قفل الانلاين
+elseif tonumber(msg.via_bot_user_id_) ~= 0 and redis:get(A7KAN..'mute_inline'..msg.chat_id_) then -- قفل الانلاين
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send inline \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(msg.chat_id_,msg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..msg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..msg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا الانلاين مقفول  \n📛",12,utf8.len(USERNAME)) 
@@ -3543,14 +3543,14 @@ end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 elseif msg.text then -- رسايل فقط
-if utf8.len(msg.text) > 500 and redis:get(kenwa..'lock_spam'..msg.chat_id_) then -- قفل الكليشه 
+if utf8.len(msg.text) > 500 and redis:get(A7KAN..'lock_spam'..msg.chat_id_) then -- قفل الكليشه 
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send long msg \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 sendMsg(arg.chat_id_,msg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 return false
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال الكليشه والا سوف تجبرني على طردك  \n📛",12,utf8.len(USERNAME)) 
@@ -3567,7 +3567,7 @@ or msg.text:match("[Hh][Tt][Tt][Pp][Ss]://")
 or msg.text:match("[Hh][Tt][Tt][Pp]://") 
 or msg.text:match("[Ww][Ww][Ww].") 
 or msg.text:match(".[Cc][Oo][Mm]")) 
-and redis:get(kenwa..':tqeed_link:'..msg.chat_id_)  then
+and redis:get(A7KAN..':tqeed_link:'..msg.chat_id_)  then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m The user i restricted becuse send link \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
@@ -3580,13 +3580,13 @@ elseif(msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/")
 or msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") 
 or msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Oo][Rr][Gg]/") 
 or msg.text:match("[Tt].[Mm][Ee]/") or msg.text:match(".[Pp][Ee]")) 
-and redis:get(kenwa..'lock_link'..msg.chat_id_) then
+and redis:get(A7KAN..'lock_link'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send link \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال الروابط  \n📛",12,utf8.len(USERNAME)) 
@@ -3594,13 +3594,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif (msg.text:match("[Hh][Tt][Tt][Pp][Ss]://") or msg.text:match("[Hh][Tt][Tt][Pp]://") or msg.text:match("[Ww][Ww][Ww].") or msg.text:match(".[Cc][Oo][Mm]") or msg.text:match(".[Tt][Kk]") or msg.text:match(".[Mm][Ll]") or msg.text:match(".[Oo][Rr][Gg]")) and redis:get(kenwa..'lock_webpage'..msg.chat_id_) then
+elseif (msg.text:match("[Hh][Tt][Tt][Pp][Ss]://") or msg.text:match("[Hh][Tt][Tt][Pp]://") or msg.text:match("[Ww][Ww][Ww].") or msg.text:match(".[Cc][Oo][Mm]") or msg.text:match(".[Tt][Kk]") or msg.text:match(".[Mm][Ll]") or msg.text:match(".[Oo][Rr][Gg]")) and redis:get(A7KAN..'lock_webpage'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send web link \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال روابط الويب   \n📛",12,utf8.len(USERNAME)) 
@@ -3608,13 +3608,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.text:match("#[%a%d_]+") and redis:get(kenwa..'lock_tag'..msg.chat_id_) then
+elseif msg.text:match("#[%a%d_]+") and redis:get(A7KAN..'lock_tag'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send tag \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال التاك  \n📛",12,utf8.len(USERNAME)) 
@@ -3622,13 +3622,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.text:match("@[%a%d_]+")  and redis:get(kenwa..'lock_username'..msg.chat_id_) then
+elseif msg.text:match("@[%a%d_]+")  and redis:get(A7KAN..'lock_username'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send username \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال المعرف   \n📛",12,utf8.len(USERNAME)) 
@@ -3636,13 +3636,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif not msg.textEntityTypeBold and (msg.textEntityTypeBold or msg.textEntityTypeItalic) and redis:get(kenwa..'lock_markdown'..msg.chat_id_) then 
+elseif not msg.textEntityTypeBold and (msg.textEntityTypeBold or msg.textEntityTypeItalic) and redis:get(A7KAN..'lock_markdown'..msg.chat_id_) then 
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send markdown \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ ممنوع ارسال الماركدوان  \n📛",12,utf8.len(USERNAME)) 
@@ -3650,13 +3650,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.textEntityTypeTextUrl and redis:get(kenwa..'lock_webpage'..msg.chat_id_) then
+elseif msg.textEntityTypeTextUrl and redis:get(A7KAN..'lock_webpage'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send web page \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦  .ممنوع ارسال روابط الويب   \n📛",12,utf8.len(USERNAME)) 
@@ -3665,13 +3665,13 @@ end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 end 
-elseif msg.content_.ID == "MessageUnsupported" and redis:get(kenwa..'mute_video'..msg.chat_id_) then -- قفل الفيديو
+elseif msg.content_.ID == "MessageUnsupported" and redis:get(A7KAN..'mute_video'..msg.chat_id_) then -- قفل الفيديو
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send video \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الفيديو كام \n📛",12,utf8.len(USERNAME)) 
@@ -3680,13 +3680,13 @@ end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 elseif msg.content_.ID == "MessagePhoto" then
-if redis:get(kenwa..'mute_photo'..msg.chat_id_)  then -- قفل الصور
+if redis:get(A7KAN..'mute_photo'..msg.chat_id_)  then -- قفل الصور
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send photo \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الصور  \n📛",12,utf8.len(USERNAME))
@@ -3694,7 +3694,7 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif redis:get(kenwa..':tqeed_photo:'..msg.chat_id_) then
+elseif redis:get(A7KAN..':tqeed_photo:'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m The user resctricted becuse send photo \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
@@ -3705,13 +3705,13 @@ end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 end
 elseif msg.content_.ID == "MessageVideo" then
-if redis:get(kenwa..'mute_video'..msg.chat_id_) then -- قفل الفيديو
+if redis:get(A7KAN..'mute_video'..msg.chat_id_) then -- قفل الفيديو
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send vedio \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الفيديو  \n📛",12,utf8.len(USERNAME)) 
@@ -3719,7 +3719,7 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif redis:get(kenwa..':tqeed_video:'..msg.chat_id_) then
+elseif redis:get(A7KAN..':tqeed_video:'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m The user restricted becuse send video \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
@@ -3729,13 +3729,13 @@ Restrict(arg.chat_id_,arg.sender_user_id_,3)
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 end
-elseif msg.content_.ID == "MessageDocument" and redis:get(kenwa..'mute_document'..msg.chat_id_) then -- قفل الملفات
+elseif msg.content_.ID == "MessageDocument" and redis:get(A7KAN..'mute_document'..msg.chat_id_) then -- قفل الملفات
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send file \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الملفات  \n📛",12,utf8.len(USERNAME)) 
@@ -3743,13 +3743,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.ID == "MessageSticker" and redis:get(kenwa..'mute_sticker'..msg.chat_id_) then --قفل الملصقات
+elseif msg.content_.ID == "MessageSticker" and redis:get(A7KAN..'mute_sticker'..msg.chat_id_) then --قفل الملصقات
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send sticker \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الملصقات  \n📛",12,utf8.len(USERNAME)) 
@@ -3758,13 +3758,13 @@ end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 elseif msg.content_.ID == "MessageAnimation" then
-if redis:get(kenwa..'mute_gif'..msg.chat_id_) then -- قفل المتحركه
+if redis:get(A7KAN..'mute_gif'..msg.chat_id_) then -- قفل المتحركه
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send gif \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الصور المتحركه  \n📛",12,utf8.len(USERNAME)) 
@@ -3772,7 +3772,7 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif redis:get(kenwa..':tqeed_gif:'..msg.chat_id_) then
+elseif redis:get(A7KAN..':tqeed_gif:'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m The user restricted becuse send gif \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
@@ -3782,13 +3782,13 @@ Restrict(arg.chat_id_,arg.sender_user_id_,3)
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
 end
-elseif msg.content_.ID == "MessageContact" and redis:get(kenwa..'mute_contact'..msg.chat_id_) then -- قفل الجهات
+elseif msg.content_.ID == "MessageContact" and redis:get(A7KAN..'mute_contact'..msg.chat_id_) then -- قفل الجهات
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send Contact \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME..'\n📛¦ عذرا ممنوع ارسال جهات الاتصال  \n📛',12,utf8.len(USERNAME)) 
@@ -3796,13 +3796,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.ID == "MessageLocation" and redis:get(kenwa..'mute_location'..msg.chat_id_) then -- قفل الموقع
+elseif msg.content_.ID == "MessageLocation" and redis:get(A7KAN..'mute_location'..msg.chat_id_) then -- قفل الموقع
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send location \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الموقع  \n📛",12,utf8.len(USERNAME))
@@ -3810,13 +3810,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.ID == "MessageVoice" and redis:get(kenwa..'mute_voice'..msg.chat_id_) then -- قفل البصمات
+elseif msg.content_.ID == "MessageVoice" and redis:get(A7KAN..'mute_voice'..msg.chat_id_) then -- قفل البصمات
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send voice \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال البصمات  \n📛",12,utf8.len(USERNAME))
@@ -3824,13 +3824,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.ID == "MessageGame" and redis:get(kenwa..'mute_game'..msg.chat_id_) then -- قفل الالعاب
+elseif msg.content_.ID == "MessageGame" and redis:get(A7KAN..'mute_game'..msg.chat_id_) then -- قفل الالعاب
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send game \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')     
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع لعب الالعاب  \n📛",12,utf8.len(USERNAME)) 
@@ -3838,13 +3838,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.ID == "MessageAudio" and redis:get(kenwa..'mute_audio'..msg.chat_id_) then -- قفل الصوت
+elseif msg.content_.ID == "MessageAudio" and redis:get(A7KAN..'mute_audio'..msg.chat_id_) then -- قفل الصوت
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send audio \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الصوت  \n📛",12,utf8.len(USERNAME)) 
@@ -3852,13 +3852,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.reply_markup and  msg.reply_markup.ID == "replyMarkupInlineKeyboard" and redis:get(kenwa..'mute_keyboard'..msg.chat_id_) then -- كيبورد
+elseif msg.reply_markup and  msg.reply_markup.ID == "replyMarkupInlineKeyboard" and redis:get(A7KAN..'mute_keyboard'..msg.chat_id_) then -- كيبورد
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send keyboard \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا الكيبورد مقفول  \n📛",12,utf8.len(USERNAME)) 
@@ -3874,13 +3874,13 @@ or msg.content_.caption_:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/")
 or msg.content_.caption_:match("[Tt].[Mm][Ee]/") 
 or msg.content_.caption_:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") 
 or msg.content_.caption_:match(".[Pp][Ee]")) 
-and redis:get(kenwa..'lock_link'..msg.chat_id_) then
+and redis:get(A7KAN..'lock_link'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send link caption \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال الروابط  \n📛",12,utf8.len(USERNAME)) 
@@ -3892,13 +3892,13 @@ elseif (msg.content_.caption_:match("[Hh][Tt][Tt][Pp][Ss]://")
 or msg.content_.caption_:match("[Hh][Tt][Tt][Pp]://") 
 or msg.content_.caption_:match("[Ww][Ww][Ww].") 
 or msg.content_.caption_:match(".[Cc][Oo][Mm]")) 
-and redis:get(kenwa..'lock_webpage'..msg.chat_id_) then
+and redis:get(A7KAN..'lock_webpage'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send webpage caption \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال روابط الويب  \n📛",12,utf8.len(USERNAME))
@@ -3906,13 +3906,13 @@ end,{chat_id_=arg.chat_id_,id_=arg.id_})
 end
 end,{chat_id_=msg.chat_id_,id_=msg.id_,sender_user_id_=msg.sender_user_id_})
 return false
-elseif msg.content_.caption_:match("@[%a%d_]+") and redis:get(kenwa..'lock_username'..msg.chat_id_) then
+elseif msg.content_.caption_:match("@[%a%d_]+") and redis:get(A7KAN..'lock_username'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_,function(arg,data)
 print("\27[1;31m Msg Del becuse send username caption \27[0m")
 if data.ID == "Error" and data.code_ == 6 then
 return sendMsg(arg.chat_id_,arg.id_,'📛*¦* لا يمكنني مسح الرساله المخالفه .\n🎟*¦* لست مشرف او ليس لدي صلاحيه  الحذف \n ❕')    
 end
-if redis:get(kenwa..'lock_woring'..arg.chat_id_) then
+if redis:get(A7KAN..'lock_woring'..arg.chat_id_) then
 GetUserID(arg.sender_user_id_,function(arg,data)
 if data.username_ then USERNAME = '@'..data.username_ else USERNAME = FlterName(data) end
 SendMention(arg.chat_id_,data.id_,arg.id_,"👤¦ العضو » "..USERNAME.."\n📛¦ عذرا ممنوع ارسال التاك او المعرف  \n📛",12,utf8.len(USERNAME))
@@ -3928,101 +3928,101 @@ end
 SaveNumMsg(msg)
 ------------------------------{ Start Replay Send }------------------------
 
-if msg.text and redis:get(kenwa..'replay'..msg.chat_id_) then
+if msg.text and redis:get(A7KAN..'replay'..msg.chat_id_) then
 
 local Replay = false
 
-Replay = redis:hget(kenwa..'replay:all',msg.text)
+Replay = redis:hget(A7KAN..'replay:all',msg.text)
 
 if Replay then
 sendMsg(msg.chat_id_,msg.id_,Replay)
 return false
 end
 
-Replay = redis:hget(kenwa..'replay:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay:'..msg.chat_id_,msg.text)
 if Replay then 
 sendMsg(msg.chat_id_,msg.id_,Replay) 
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_photo:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_photo:group:',msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendPhoto(msg.chat_id_,msg.id_,Replay,Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_voice:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_voice:group:',msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendVoice(msg.chat_id_,msg.id_,Replay,Caption)
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_animation:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_animation:group:',msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendAnimation(msg.chat_id_,msg.id_,Replay,Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_audio:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_audio:group:',msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendAudio(msg.chat_id_,msg.id_,Replay,"",Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_sticker:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_sticker:group:',msg.text)
 if Replay then 
 sendSticker(msg.chat_id_,msg.id_,Replay)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_video:group:',msg.text)
+Replay = redis:hget(A7KAN..'replay_video:group:',msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendVideo(msg.chat_id_,msg.id_,Replay,Caption)
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_photo:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_photo:group:'..msg.chat_id_,msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendPhoto(msg.chat_id_,msg.id_,Replay,Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_voice:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_voice:group:'..msg.chat_id_,msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendVoice(msg.chat_id_,msg.id_,Replay,Caption)
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_animation:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_animation:group:'..msg.chat_id_,msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendAnimation(msg.chat_id_,msg.id_,Replay,Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_audio:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_audio:group:'..msg.chat_id_,msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendAudio(msg.chat_id_,msg.id_,Replay,"",Caption)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_sticker:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_sticker:group:'..msg.chat_id_,msg.text)
 if Replay then 
 sendSticker(msg.chat_id_,msg.id_,Replay)  
 return false
 end
 
-Replay = redis:hget(kenwa..'replay_video:group:'..msg.chat_id_,msg.text)
+Replay = redis:hget(A7KAN..'replay_video:group:'..msg.chat_id_,msg.text)
 if Replay then 
-Caption = redis:hget(kenwa..':caption_replay:'..msg.chat_id_,msg.text)
+Caption = redis:hget(A7KAN..':caption_replay:'..msg.chat_id_,msg.text)
 sendVideo(msg.chat_id_,msg.id_,Replay,Caption)
 return false
 end
@@ -4270,9 +4270,9 @@ end
 
 ------------------------------{ Start Checking CheckExpire }------------------------
 
-if msg.Admin and redis:get(kenwa..'CheckExpire::'..msg.chat_id_) then
-local ExpireDate = redis:ttl(kenwa..'ExpireDate:'..msg.chat_id_)
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
+if msg.Admin and redis:get(A7KAN..'CheckExpire::'..msg.chat_id_) then
+local ExpireDate = redis:ttl(A7KAN..'ExpireDate:'..msg.chat_id_)
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
 if SUDO_USER:match('@[%a%d_]+') then 
 SUDO_USER = "\n👨🏾‍🔧¦ راسل المطور للتجديد "..SUDO_USER
 else
@@ -4280,11 +4280,11 @@ SUDO_USER = ""
 end
 if not ExpireDate and not msg.SudoUser then
 rem_data_group(msg.chat_id_)
-sendMsg(SUDO_ID,0,'🕵🏼️‍♀️¦ انتهى الاشتراك في احد المجموعات ✋🏿\n👨🏾‍🔧¦ المجموعه : '..FlterName(redis:get(kenwa..'group:name'..msg.chat_id_))..'🍃\n💂🏻‍♀️¦ ايدي : '..msg.chat_id_)
+sendMsg(SUDO_ID,0,'🕵🏼️‍♀️¦ انتهى الاشتراك في احد المجموعات ✋🏿\n👨🏾‍🔧¦ المجموعه : '..FlterName(redis:get(A7KAN..'group:name'..msg.chat_id_))..'🍃\n💂🏻‍♀️¦ ايدي : '..msg.chat_id_)
 sendMsg(msg.chat_id_,0,'🕵🏼️‍♀️¦ انتهى الاشتراك البوت✋🏿\n💂🏻‍♀️¦ سوف اغادر المجموعه فرصه سعيده 👋🏿'..SUDO_USER..' 🍃')
 return StatusLeft(msg.chat_id_,our_id)
 else
-local DaysEx = (redis:ttl(kenwa..'ExpireDate:'..msg.chat_id_) / 86400)
+local DaysEx = (redis:ttl(A7KAN..'ExpireDate:'..msg.chat_id_) / 86400)
 if tonumber(DaysEx) > 0.208 and ExpireDate ~= -1 and msg.Admin then
 if tonumber(DaysEx + 1) == 1 and not msg.SudoUser then
 sendMsg(msg.chat_id_,'🕵🏼️‍♀️¦ باقي يوم واحد وينتهي الاشتراك ✋🏿\n '..SUDO_USER..'\n📛')
