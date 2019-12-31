@@ -2,8 +2,8 @@
     _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]] 
 Er_ssl   , https = pcall(require, "ssl.https")
@@ -31,8 +31,8 @@ Kenawlogo = [[
 #    _  _______  _   _  _   _   __ _
 #   | |/ / ____|| | / || | / | / // \
 #   | ' /|  _|  | ./ '|| ./ '|/ // _ \
-#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+#   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+#   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
 ]]
 
@@ -69,7 +69,7 @@ if not SUDO_USER:match('@[%a%d_]') then
 print('\n\27[1;31m￤ This is Not USERNAME !\n￤هہ‏‏ذآ ليس مـعرف حسـآب تلگرآم , عذرآ آدخل آلمـعرف آلصـحيح آلآن . ')
 create_config(Token)
 end 
-local url , res = https.request('https://kenwa.tk/v1/GetUser/?User='..SUDO_USER)
+local url , res = https.request('https://A7KAN.tk/v1/GetUser/?User='..SUDO_USER)
 if res ~= 200 then
 print('\n\27[1;31m￤ Conect is Failed !\n￤ حدث خطـآ في آلآتصـآل بآلسـيرفر , يرجى مـرآسـلهہ‏‏ مـطـور آلسـورس ليتمـگن مـن حل آلمـشـگلهہ‏‏ في آسـرع وقت مـمـگن . !')
 os.exit()
@@ -92,16 +92,16 @@ print('\n\27[1;31m￤ This UserName is not personal account !\n￤عذرا ير�
 create_config(Token)
 end
 print('\n\27[1;36m￤تم آدخآل مـعرف آلمـطـور بنجآح , سـوف يتم تشـغيل آلسـورس آلآن .\n￤Success Save USERNAME IS_ID: \27[0;32m['..GetUser.information.id..']\n\27[0;39;49m')
-kenwa = Token:match("(%d+)")
+A7KAN = Token:match("(%d+)")
 redis:mset(
-kenwa..":VERSION",GetUser.information.Source_version,
-kenwa..":SUDO_ID:",GetUser.information.id,
-kenwa..":DataCenter:",GetUser.information.DataCenter,
-kenwa..":UserNameBot:",BOT_User,
-kenwa..":NameBot:",BOT_NAME,
+A7KAN..":VERSION",GetUser.information.Source_version,
+A7KAN..":SUDO_ID:",GetUser.information.id,
+A7KAN..":DataCenter:",GetUser.information.DataCenter,
+A7KAN..":UserNameBot:",BOT_User,
+A7KAN..":NameBot:",BOT_NAME,
 "TH3BOSS_INSTALL","Yes"
 )
-redis:hset(kenwa..'username:'..GetUser.information.id,'username','@'..GetUser.information.username:gsub('_',[[\_]]))
+redis:hset(A7KAN..'username:'..GetUser.information.id,'username','@'..GetUser.information.username:gsub('_',[[\_]]))
 info = {}
 info.username = '@'..GetUser.information.username
 info.userbot  = BOT_User
@@ -133,15 +133,15 @@ else
 Token = TokenBot:read('*a')
 File = {}
 local login = io.popen("whoami"):read('*a'):gsub('[\n\r]+', '') 
-kenwa = Token:match("(%d+)")
-our_id = tonumber(kenwa)
+A7KAN = Token:match("(%d+)")
+our_id = tonumber(A7KAN)
 ApiToken = "https://api.telegram.org/bot"..Token
-Bot_User = redis:get(kenwa..":UserNameBot:")
-SUDO_ID = tonumber(redis:get(kenwa..":SUDO_ID:"))
+Bot_User = redis:get(A7KAN..":UserNameBot:")
+SUDO_ID = tonumber(redis:get(A7KAN..":SUDO_ID:"))
 if not SUDO_ID then io.popen("rm -fr ./inc/Token.txt") end
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
-version = redis:get(kenwa..":VERSION")
-DataCenter = redis:get(kenwa..":DataCenter:")
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
+version = redis:get(A7KAN..":VERSION")
+DataCenter = redis:get(A7KAN..":DataCenter:")
 
 local ok, ERROR =  pcall(function() loadfile("./inc/functions.lua")() end)
 if not ok then 
@@ -165,13 +165,13 @@ print('\27[0;33m>>'..[[
     _  _______  _   _  _   _   __ _
    | |/ / ____|| | / || | / | / // \
    | ' /|  _|  | ./ '|| ./ '|/ // _ \
-   | . \| |___ | ' | || ' | ' // ___ \   DEV:@ii66ii
-   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @kenwa
+   | . \| |___ | ' | || ' | ' // ___ \   DEV:@A3KON
+   \_|\_\_____|\_ /|_|\_ /|_ //_/   \_\   CH: @A7KAN
 ------------------------------------------------------
                                                   
 ]]..'\027[0;32m'
 ..'¦ TOKEN_BOT: \27[1;34m'..Token..'\027[0;32m\n'
-..'¦ BOT__INFO: \27[1;34m'.. Bot_User..'\27[0;36m » ('..kenwa..')\027[0;32m\n'
+..'¦ BOT__INFO: \27[1;34m'.. Bot_User..'\27[0;36m » ('..A7KAN..')\027[0;32m\n'
 ..'¦ INFO_SUDO: \27[1;34m'..SUDO_USER:gsub([[\_]],'_')..'\27[0;36m » ('..SUDO_ID..')\27[m\027[0;32m\n'
 ..'¦ Run_Scrpt: \27[1;34m./inc/Script.lua\027[0;32m \n'
 ..'¦ LOGIN__IN: \27[1;34m'..login..'\027[0;32m \n'
@@ -235,26 +235,26 @@ and msg.content_.ID ~= "MessageChatChangeTitle" then
 return false
 end
 
-if msg.type == "pv" and redis:get(kenwa..':mute_pv:'..msg.chat_id_) then
+if msg.type == "pv" and redis:get(A7KAN..':mute_pv:'..msg.chat_id_) then
 print('\27[1;31m is_MUTE_BY_FLOOD\27[0m')
 return false 
 end
 
-if msg.type ~= "pv" and redis:get(kenwa..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood') then
+if msg.type ~= "pv" and redis:get(A7KAN..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood') then
 print("\27[1;31mThis Flood Sender ...\27[0")
 Del_msg(msg.chat_id_,msg.id_)
 return false
 end
 
 
-if redis:get(kenwa..'group:add'..msg.chat_id_) then 
+if redis:get(A7KAN..'group:add'..msg.chat_id_) then 
 msg.GroupActive = true
 else
 msg.GroupActive = false
 end
 
 if msg.content_.ID == "MessageChatDeleteMember" then 
-if msg.GroupActive and redis:get(kenwa..'mute_tgservice'..msg.chat_id_) then
+if msg.GroupActive and redis:get(A7KAN..'mute_tgservice'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_)
 end
 return false 
@@ -264,23 +264,23 @@ if msg.sender_user_id_ == SUDO_ID then
 msg.TheRankCmd = 'المطور 👨🏻‍✈️' 
 msg.TheRank = 'مطور اساسي 👨🏻‍✈️' 
 msg.Rank = 1
-elseif redis:sismember(kenwa..':SUDO_BOT:',msg.sender_user_id_) then 
+elseif redis:sismember(A7KAN..':SUDO_BOT:',msg.sender_user_id_) then 
 msg.TheRankCmd = 'المطور 👨🏽‍💻'
 msg.TheRank = 'مطور البوت 👨🏽‍💻'
 msg.Rank = 2
-elseif msg.GroupActive and redis:sismember(kenwa..':MONSHA_BOT:'..msg.chat_id_,msg.sender_user_id_) then 
+elseif msg.GroupActive and redis:sismember(A7KAN..':MONSHA_BOT:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'المنشىء 👷🏽'
 msg.TheRank = 'المنشىء 👷🏽'
 msg.Rank = 3
-elseif msg.GroupActive and redis:sismember(kenwa..'owners:'..msg.chat_id_,msg.sender_user_id_) then 
+elseif msg.GroupActive and redis:sismember(A7KAN..'owners:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'المدير 👨🏼‍⚕️' 
 msg.TheRank = 'مدير البوت 👨🏼‍⚕️' 
 msg.Rank = 4
-elseif msg.GroupActive and redis:sismember(kenwa..'admins:'..msg.chat_id_,msg.sender_user_id_) then 
+elseif msg.GroupActive and redis:sismember(A7KAN..'admins:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'الادمن 👨🏼‍🎓'
 msg.TheRank = 'ادمن في البوت 👨🏼‍🎓'
 msg.Rank = 5
-elseif msg.GroupActive and redis:sismember(kenwa..'whitelist:'..msg.chat_id_,msg.sender_user_id_) then 
+elseif msg.GroupActive and redis:sismember(A7KAN..'whitelist:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRank = 'عضو مميز ⭐️'
 msg.Rank = 6
 elseif msg.sender_user_id_ == our_id then
@@ -321,7 +321,7 @@ end
 ISONEBOT = false
 
 if msg.content_.ID == "MessageChatAddMembers" then
-local lock_bots = redis:get(kenwa..'lock_bots'..msg.chat_id_)
+local lock_bots = redis:get(A7KAN..'lock_bots'..msg.chat_id_)
 ZISBOT = false
 local countAdd = #msg.content_.members_
 for i=0,countAdd do
@@ -365,12 +365,12 @@ end,{i=i,count=countAdd,chat_id_=msg.chat_id_,msgs_id=msgs_id})
 end
 end
 end
-if msg.GroupActive and ZISBOT and redis:get(kenwa..'lock_bots_by_kick'..msg.chat_id_) then
+if msg.GroupActive and ZISBOT and redis:get(A7KAN..'lock_bots_by_kick'..msg.chat_id_) then
 kick_user(msg.sender_user_id_, msg.chat_id_)
 end
-if msg.content_.members_[0].id_ == our_id and redis:get(kenwa..':WELCOME_BOT') then
-SUDO_USER = redis:hgetall(kenwa..'username:'..SUDO_ID).username
-sendPhoto(msg.chat_id_,msg.id_,redis:get(kenwa..':WELCOME_BOT'),[[💯¦ مـرحبآ آنآ بوت آسـمـي ]]..redis:get(kenwa..':NameBot:')..[[ 🎖
+if msg.content_.members_[0].id_ == our_id and redis:get(A7KAN..':WELCOME_BOT') then
+SUDO_USER = redis:hgetall(A7KAN..'username:'..SUDO_ID).username
+sendPhoto(msg.chat_id_,msg.id_,redis:get(A7KAN..':WELCOME_BOT'),[[💯¦ مـرحبآ آنآ بوت آسـمـي ]]..redis:get(A7KAN..':NameBot:')..[[ 🎖
 💰¦ آختصـآصـي حمـآيهہ‏‏ آلمـجمـوعآت
 📛¦ مـن آلسـبآم وآلتوجيهہ‏‏ وآلتگرآر وآلخ...
 ⚖️¦ مـعرف آلمـطـور  : ]]..SUDO_USER:gsub([[\_]],'_')..[[ 🌿
@@ -385,7 +385,7 @@ msg.adduserType = msg.content_.members_[0].type_.ID
 end
 end
 
-if msg.content_.ID == "MessageChatJoinByLink" and redis:get(kenwa..':lock_Add_User:'..msg.chat_id_) then 
+if msg.content_.ID == "MessageChatJoinByLink" and redis:get(A7KAN..':lock_Add_User:'..msg.chat_id_) then 
 kick_user(msg.sender_user_id_,msg.chat_id_,function(arg,data) 
 StatusLeft(arg.ChatID,arg.UserID)
 end,{ChatID=msg.chat_id_,UserID=msg.sender_user_id_})
@@ -393,7 +393,7 @@ return false
 end
 
 if msg.content_.ID == "MessageChatAddMembers" or msg.content_.ID == "MessageChatJoinByLink" then 
-if msg.GroupActive and redis:get(kenwa..'mute_tgservice'..msg.chat_id_) then
+if msg.GroupActive and redis:get(A7KAN..'mute_tgservice'..msg.chat_id_) then
 Del_msg(msg.chat_id_,msg.id_)
 return false 
 end
@@ -411,7 +411,7 @@ end
 
 --[[ المكتومين ]]
 if msg.GroupActive and MuteUser(msg.chat_id_,msg.sender_user_id_) then 
-if msg.Admin then redis:srem(kenwa..'is_silent_users:'..msg.chat_id_,msg.sender_user_id_) return end
+if msg.Admin then redis:srem(A7KAN..'is_silent_users:'..msg.chat_id_,msg.sender_user_id_) return end
 print("\27[1;31m User is Silent\27[0m")
 Del_msg(msg.chat_id_,msg.id_)
 return false 
@@ -419,7 +419,7 @@ end
 
 --[[ المحظورين ]]
 if msg.GroupActive and Check_Banned((msg.adduser or msg.sender_user_id_),msg.sender_user_id_) then
-if msg.Admin then redis:srem(kenwa..'banned:'..msg.chat_id_,msg.sender_user_id_) return end
+if msg.Admin then redis:srem(A7KAN..'banned:'..msg.chat_id_,msg.sender_user_id_) return end
 print('\27[1;31m is_BANED_USER\27[0m')
 Del_msg(msg.chat_id_, msg.id_)
 kick_user((msg.adduser or msg.sender_user_id_), msg.chat_id_)
@@ -427,7 +427,7 @@ return false
 end
 
 if msg.GroupActive and not msg.Admin then
-if redis:get(kenwa..'mute_text'..msg.chat_id_) then --قفل الدردشه
+if redis:get(A7KAN..'mute_text'..msg.chat_id_) then --قفل الدردشه
 print("\27[1;31m Chat is Mute \27[0m")
 Del_msg(msg.chat_id_,msg.id_)
 return false 
@@ -449,11 +449,11 @@ Text = Text:gsub("ه‍","ه")
 if Text:match(Boss) then -- Check Commands To admin
 if not CheckFlood(msg.sender_user_id_,msg.chat_id_,3) and not msg.SudoUser then
 print("user is flood")
-redis:setex(kenwa..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood',10,true)
+redis:setex(A7KAN..'sender:'..msg.sender_user_id_..':'..msg.chat_id_..'flood',10,true)
 kick_user(msg.sender_user_id_,msg.chat_id_,function(arg,data)
 if data.ID == "Error" then
 StatusLeft(arg.chat_id_,our_id)
-local NameGroup = Flter_Markdown(redis:get(kenwa..'group:name'..arg.chat_id_) or "")
+local NameGroup = Flter_Markdown(redis:get(A7KAN..'group:name'..arg.chat_id_) or "")
 sendMsg(arg.chat_id_,1,'📛*¦* تم مغادره وتعطيل البوت \n🎟*¦* بسبب التكرار وليس لدي صلاحيه لطرد الشخص المخالف\n ❕')    
 sendMsg(SUDO_ID,1,'📛*¦* تم مغادره وتعطيل البوت \n🎟*¦* بسبب التكرار \n\n|id : `'..arg.chat_id_..'`\n|Name : '..NameGroup..'\n ❕')    
 rem_data_group(arg.chat_id_)
@@ -463,7 +463,7 @@ return false
 end
 local GetMsg = ScriptFile.iBoss(msg,{Text:match(Boss)})
 if GetMsg then
-print("\27[1;35m¦This_Msg : ",kenwa.." | Plugin is: \27[1;32mScript.lua\27[0m")
+print("\27[1;35m¦This_Msg : ",A7KAN.." | Plugin is: \27[1;32mScript.lua\27[0m")
 sendMsg(msg.chat_id_,msg.id_,GetMsg)
 return false
 end 
@@ -482,23 +482,23 @@ if arg.Status == "ChatMemberStatusEditor" then
 Restrict(arg.chat_id_,data.id_,300)
 MsgFlood = "👤¦ العضو » "..USERNAME.." \n📇¦ تم تقييدك لمدة 5 دقائق \n📛¦ تم تصفير احصائيات رسائلك \n🚸¦ بسبب تكرارك لاكثر من 15 رسالة ...  \n"
 else
-redis:setex(kenwa..'sender:'..data.id_..':'..arg.chat_id_..'flood',300,true)
+redis:setex(A7KAN..'sender:'..data.id_..':'..arg.chat_id_..'flood',300,true)
 MsgFlood = "👤¦ العضو » "..USERNAME.." \n📇¦ ولانك ادمن تم كتمك لمده 5 دقائق \n📛¦ تم تصفير احصائيات رسائلك \n🚸¦ بسبب تكرارك لاكثر من 15 رسالة ...  \n"
 end
 SendMention(arg.chat_id_,data.id_,arg.id_,'👤¦ العضو » '..USERNAME..' \n🎫¦ الايدي » {'..data.id_..'}\n🛠¦ تم الغاء حظره \n✓️',12,USERCAR) 
 end,{chat_id_=arg.chat_id_,id_=arg.id_,Status= data.status_.ID})
 end,{chat_id_=msg.chat_id_,sender_user_id_=msg.sender_user_id_,id_=msg.id_})
 
-redis:del(kenwa..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_,
-kenwa..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':photo:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':voice:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':audio:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':animation:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':edited:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':video:'..msg.chat_id_..':'..msg.sender_user_id_,
-kenwa..':Flood_Spam:'..msg.sender_user_id_..':'..msg.chat_id_..':msgs')
+redis:del(A7KAN..'msgs:'..msg.sender_user_id_..':'..msg.chat_id_,
+A7KAN..':adduser:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':photo:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':sticker:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':voice:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':audio:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':animation:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':edited:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':video:'..msg.chat_id_..':'..msg.sender_user_id_,
+A7KAN..':Flood_Spam:'..msg.sender_user_id_..':'..msg.chat_id_..':msgs')
 return false 
 end
 if not ScriptFile.dBoss(msg) then
@@ -512,7 +512,7 @@ for k, Boss in pairs(Plug.Boss) do
 if msg.text:match(Boss) then
 local GetMsg = Plug.iBoss(msg,{msg.text:match(Boss)})
 if GetMsg then
-print("\27[1;35m¦This_Msg : ",kenwa.." | Plugin is: \27[1;32m"..name.."\27[0m")
+print("\27[1;35m¦This_Msg : ",A7KAN.." | Plugin is: \27[1;32m"..name.."\27[0m")
 sendMsg(msg.chat_id_,msg.id_,GetMsg)
 end 
 return false
@@ -541,7 +541,7 @@ function tdcli_update_callback(data)
 	local msg = data.message_
 	if data.ID == "UpdateMessageSendFailed" then 
 	if msg and msg.sender_user_id_ then
-	redis:srem(kenwa..'users',msg.sender_user_id_)
+	redis:srem(A7KAN..'users',msg.sender_user_id_)
 	end
 	elseif data.ID == "UpdateMessageSendSucceeded" then
 	if Refresh_Start then
@@ -553,14 +553,14 @@ function tdcli_update_callback(data)
 	UpdateSourceStart = false
 	EditMsg(data.message_.chat_id_,data.message_.id_,'10% - |█          |')
 	EditMsg(data.message_.chat_id_,data.message_.id_,'20% - |███         |')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/Run.lua','./inc/Run.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/Run.lua','./inc/Run.lua')
 	EditMsg(data.message_.chat_id_,data.message_.id_,'40% - |█████       |')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/locks.lua','./inc/locks.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/locks.lua','./inc/locks.lua')
 	EditMsg(data.message_.chat_id_,data.message_.id_,'60% - |███████     |')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/Script.lua','./inc/Script.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/Script.lua','./inc/Script.lua')
 	EditMsg(data.message_.chat_id_,data.message_.id_,'80% - |█████████   |')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/functions.lua','./inc/functions.lua')
-	EditMsg(data.message_.chat_id_,data.message_.id_,'100% - |█████████████|\n\n🔝*¦* تم تحديث السورس الى اصدار *v'..redis:get(kenwa..":VERSION")..'*\n📟*¦* تم اعاده تشغيل السورس بنجاح')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/functions.lua','./inc/functions.lua')
+	EditMsg(data.message_.chat_id_,data.message_.id_,'100% - |█████████████|\n\n🔝*¦* تم تحديث السورس الى اصدار *v'..redis:get(A7KAN..":VERSION")..'*\n📟*¦* تم اعاده تشغيل السورس بنجاح')
 	dofile("./inc/Run.lua")
 	print("Update Source And Reload ~ ./inc/Run.lua")
 	end
@@ -588,10 +588,10 @@ function tdcli_update_callback(data)
 	end)
 	end 
 	if msg.text == 'Update Source' and msg.sender_user_id_ == SUDO_ID then
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/Run.lua','./inc/Run.lua')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/Script.lua','./inc/Script.lua')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/functions.lua','./inc/functions.lua')
-	download_file('https://raw.githubusercontent.com/Aekan8/KENWA/master/inc/locks.lua','./inc/locks.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/Run.lua','./inc/Run.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/Script.lua','./inc/Script.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/functions.lua','./inc/functions.lua')
+	download_file('https://raw.githubusercontent.com/Aekan8/A7KAN/master/inc/locks.lua','./inc/locks.lua')
 	sendMsg(msg.chat_id_,msg.id_,'👷🏽| {* تــم تحديث وتثبيت السورس  *} 📡.\n\n👨🏼‍💼| { Bot is Update » }👍🏿',function(arg,data)
 	dofile("./inc/Run.lua")
 	print("| Reload is Successful ~ ./inc/Run.lua")
@@ -608,14 +608,14 @@ function tdcli_update_callback(data)
 	input_inFo(msg)
 	
 	elseif data.ID == "UpdateNewChat" then  
-	if redis:get(kenwa..'group:add'..data.chat_.id_) then
-	redis:set(kenwa..'group:name'..data.chat_.id_,data.chat_.title_)
+	if redis:get(A7KAN..'group:add'..data.chat_.id_) then
+	redis:set(A7KAN..'group:name'..data.chat_.id_,data.chat_.title_)
 	end
 	elseif data.ID == "UpdateChannel" then  
 	if data.channel_.status_.ID == "ChatMemberStatusKicked" then 
-	if redis:get(kenwa..'group:add-100'..data.channel_.id_) then
-	local linkGroup = (redis:get(kenwa..'linkGroup-100'..data.channel_.id_) or "")
-	local NameGroup = Flter_Markdown(redis:get(kenwa..'group:name-100'..data.channel_.id_) or "")
+	if redis:get(A7KAN..'group:add-100'..data.channel_.id_) then
+	local linkGroup = (redis:get(A7KAN..'linkGroup-100'..data.channel_.id_) or "")
+	local NameGroup = Flter_Markdown(redis:get(A7KAN..'group:name-100'..data.channel_.id_) or "")
 	send_msg(SUDO_ID,"📛| قام شخص بطرد البوت من المجموعه الاتيه : \n🏷| ألايدي : `-100"..data.channel_.id_.."`\n🗯| الـمجموعه : "..NameGroup.."\n\n📮| تـم مسح كل بيانات المجموعه بنـجاح ")
 	rem_data_group('-100'..data.channel_.id_)
 	end
@@ -627,52 +627,52 @@ function tdcli_update_callback(data)
 	local All_Groups = JSON.decode(GetInfo)
 	for k,IDS in pairs(All_Groups.Groups) do
 	redis:mset(
-	kenwa..'group:name'..k,IDS.Title,
-	kenwa..'num_msg_max'..k,5,
-	kenwa..'group:add'..k,true,
-	kenwa..'lock_link'..k,true,
-	kenwa..'lock_spam'..k,true,
-	kenwa..'lock_webpage'..k,true,
-	kenwa..'lock_markdown'..k,true,
-	kenwa..'lock_flood'..k,true,
-	kenwa..'lock_bots'..k,true,
-	kenwa..'mute_forward'..k,true,
-	kenwa..'mute_contact'..k,true,
-	kenwa..'mute_document'..k,true,
-	kenwa..'mute_inline'..k,true,
-	kenwa..'lock_username'..k,true,
-	kenwa..'replay'..k,true
+	A7KAN..'group:name'..k,IDS.Title,
+	A7KAN..'num_msg_max'..k,5,
+	A7KAN..'group:add'..k,true,
+	A7KAN..'lock_link'..k,true,
+	A7KAN..'lock_spam'..k,true,
+	A7KAN..'lock_webpage'..k,true,
+	A7KAN..'lock_markdown'..k,true,
+	A7KAN..'lock_flood'..k,true,
+	A7KAN..'lock_bots'..k,true,
+	A7KAN..'mute_forward'..k,true,
+	A7KAN..'mute_contact'..k,true,
+	A7KAN..'mute_document'..k,true,
+	A7KAN..'mute_inline'..k,true,
+	A7KAN..'lock_username'..k,true,
+	A7KAN..'replay'..k,true
 	)
-	redis:sadd(kenwa..'group:ids',k) 
+	redis:sadd(A7KAN..'group:ids',k) 
 
 	if IDS.Admins then
 	for user,ID in pairs(IDS.Admins) do
-	redis:hset(kenwa..'username:'..ID,'username',user)
-	redis:sadd(kenwa..'admins:'..k,ID)
+	redis:hset(A7KAN..'username:'..ID,'username',user)
+	redis:sadd(A7KAN..'admins:'..k,ID)
 	end
 	end
 	if IDS.Creator then
 	for user,ID in pairs(IDS.Creator) do
-	redis:hset(kenwa..'username:'..ID,'username',user)
-	redis:sadd(kenwa..':MONSHA_BOT:'..k,ID)
+	redis:hset(A7KAN..'username:'..ID,'username',user)
+	redis:sadd(A7KAN..':MONSHA_BOT:'..k,ID)
 	end
 	end
 	if IDS.Owner then
 	for user,ID in pairs(IDS.Owner) do
-	redis:hset(kenwa..'username:'..ID,'username',user)
-	redis:sadd(kenwa..'owners:'..k,ID)
+	redis:hset(A7KAN..'username:'..ID,'username',user)
+	redis:sadd(A7KAN..'owners:'..k,ID)
 	end
 	end
 	end
 	io.popen("rm -fr ../.telegram-cli/data/document/*")
-	sendMsg(Uploaded_Groups_CH,Uploaded_Groups_MS,'📦*¦* تم رفع آلنسـخهہ‏‏ آلآحتيآطـيهہ\n⚖️*¦* حآليآ عدد مـجمـوعآتگ هہ‏‏يهہ‏‏ *'..redis:scard(kenwa..'group:ids')..'* 🌿\n✓')
+	sendMsg(Uploaded_Groups_CH,Uploaded_Groups_MS,'📦*¦* تم رفع آلنسـخهہ‏‏ آلآحتيآطـيهہ\n⚖️*¦* حآليآ عدد مـجمـوعآتگ هہ‏‏يهہ‏‏ *'..redis:scard(A7KAN..'group:ids')..'* 🌿\n✓')
 	end
 	elseif data.ID == "UpdateUser" then  
 	if data.user_.type_.ID == "UserTypeDeleted" then
 	print("¦ userTypeDeleted")
-	redis:srem(kenwa..'users',data.user_.id_)
+	redis:srem(A7KAN..'users',data.user_.id_)
 	elseif data.user_.type_.ID == "UserTypeGeneral" then
-	local CheckUser = redis:hgetall(kenwa..'username:'..data.user_.id_).username
+	local CheckUser = redis:hgetall(A7KAN..'username:'..data.user_.id_).username
 	if data.user_.username_  then 
 	USERNAME = '@'..data.user_.username_:gsub('_',[[\_]])
 	else
@@ -680,7 +680,7 @@ function tdcli_update_callback(data)
 	end	
 	if CheckUser and CheckUser ~= USERNAME  then
 	print("¦ Enter Update User ")
-	redis:hset(kenwa..'username:'..data.user_.id_,'username',USERNAME)
+	redis:hset(A7KAN..'username:'..data.user_.id_,'username',USERNAME)
 	end 
 	end
 	elseif data.ID == "UpdateMessageEdited" then
